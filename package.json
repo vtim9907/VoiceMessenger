@@ -1,0 +1,24 @@
+{
+  "name": "VoiceMessenger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vtim9907/VoiceMessenger.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vtim9907/VoiceMessenger/issues"
+  },
+  "homepage": "https://github.com/vtim9907/VoiceMessenger#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
