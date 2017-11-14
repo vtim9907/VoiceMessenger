@@ -1,8 +1,16 @@
 var express = require('express');
 var app = express();
 var port = 8086;
-var bodyparser = require('body-parser');
+//var bodyparser = require('body-parser');
 var multer = require('multer');
+var https = require('https');
+var fs = require('fs');
+
+var pkey = fs.readFileSync('./ssl/private.key','utf8');
+var crt = fs.readFileSync('./ssl/certificate.crt');
+
+
+
 
 app.use(express.static(__dirname+'/public'));
 
@@ -29,4 +37,7 @@ app.post('/mp3',mp3.single('mp3'),function(req,res){
 });
 
 
-app.listen(port);
+//app.listen(port);
+
+var server = https.createServer({key:pkey,cert:crt}, app);
+server.listen(port,function(){console.log(port)});
