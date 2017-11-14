@@ -5,8 +5,16 @@
   "display": "standalone",
   "orientation": "portrait",
   "icons": [{
-    "src": "./src/VOCA-144x144.png",
-    "sizes": "144x144",
+    "src": "./icon/microphone48.png",
+    "sizes": "48x48",
+    "type": "image/png"
+  },{
+    "src": "./icon/microphone72.png",
+    "sizes": "72x72",
+    "type": "image/png"
+  },{
+    "src": "./icon/microphone96.png",
+    "sizes": "96x96",
     "type": "image/png"
   }]
 }
