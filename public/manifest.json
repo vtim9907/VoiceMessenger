@@ -1,7 +1,7 @@
 {
   "name": "VoiceMessenger pwa",
-  "short_name": "VM",
-  "start_url": "./",
+  "short_name": "VoiceMessenger",
+  "start_url": "./index2.html",
   "display": "standalone",
   "orientation": "portrait",
   "icons": [{
