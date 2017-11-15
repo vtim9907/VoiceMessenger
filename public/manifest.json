@@ -1,0 +1,13 @@
+{
+    "name": "VoiceMessenger",
+    "short_name": "VoiceMessenger",
+    "description": "Introduce yourself by your voice, and feel free to chat with stranger anonymously",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "orientation": "portrait",
+    "icons": [{
+      "src": "./assets/img/temp.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }]
+}
