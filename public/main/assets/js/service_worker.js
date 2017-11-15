@@ -1,6 +1,6 @@
 const cacheFile = [
-  '../../',
-  '../../index.html',
+  '/',
+  './index.html',
 ]
 
 const cacheKey = 'demo-app-v1'
