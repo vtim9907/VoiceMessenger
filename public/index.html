@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>index</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<link href="assets/css/main.css" rel="stylesheet">
+  <link rel="manifest" href="./manifest.json">
+	<script type="text/javascript" src="assets/js/Vue.js"></script>
+	<script type="text/javascript" src="assets/js/lame.all.js"></script>
+	<script type="text/javascript" src="assets/js/RecordRTC.js"></script>
+	<script type="text/javascript" src="./service_worker.js"></script>
+</head>
+<body>
+	<div id="app" :class="classObject">
+		<div is="head_bar"></div>
+		<div is="main_page"></div>
+	</div>
+
+	<script type="text/x-template" id="head_bar">
+		<div class="row bg-primary">
+			
+			<nav class="navbar navbar-dark bg-primary nav-fill">
+			  <a class="navbar-brand" href="#">
+			    <img src="./assets/img/logo-voiceMessage.png" class="d-inline-block align-top" alt="">
+			  </a>
+			  <div class="col d-lg-none">
+			  	<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+				  <button type="button" class="btn btn-primary" v-for="(i,index) in buttonList" @click="changeView(viewList[index])">{{i}}</button>
+				</div>
+			  </div>
+			  
+			</nav>
+
+		</div>
+	</script>
+
+	<script type="text/x-template" id="left_page">
+		<transition name="slide-fade">
+		<div class="col-6 col-lg-2 d-none d-lg-block">
+			<div class="card">
+				<img src="https://goo.gl/eKdiuU" class="card-img-top">
+				<div class="card-body">
+					<ul class="list-group">
+						<li class="list-group-item p-0" v-for="i in introList">{{i}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="list-group">
+				<button class="list-group-item list-group-item-primary list-group-item-action" v-for="(i,index) in buttonList" @click="changeView(viewList[index])">{{i}}</button>
+			</div>
+		</div>
+		</transition>
+	</script>
+	
+	<script type="text/x-template" id="right_page">
+		<div class="col-lg-10">
+			<keep-alive>
+				<component :is="currentView">
+				
+				</component>
+			</keep-alive>
+		</div>
+	</script>
+
+	<script type="text/x-template" id="main_page">
+		<div class="row">
+			<div is="left_page"></div>
+			<div is="right_page"></div>
+		</div>
+	</script>
+
+	<script type="text/x-template" id="record">
+		<div class="row justify-content-center">
+			<canvas class="w-75 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
+			<audio class="col-12" :id="i" controls v-for="i in audioList"></audio>
+			<div class="btn-group">
+				<button type="button" class="btn" @click="start()" value="start">start</button>
+				<button type="button" class="btn" @click="stop()" value="stop">stop</button>
+        <!--
+				<button type="button" class="btn" @click="download()" value="play">download</button>
+        -->
+				<button type="button" class="btn" @click="send()" value="send">send wav</button>
+				<button type="button" class="btn" @click="mp3()" value="mp3">mp3</button>
+				<button type="button" class="btn" @click="sendMp3()" value="sendMp3">sendMp3</button>	
+			</div>
+			
+		</div>
+	</script>
+<script type="text/javascript" src="assets/js/main.js"></script>
+<script type="text/javascript" src="assets/js/register.js"></script> 
+</body>
+</html>
