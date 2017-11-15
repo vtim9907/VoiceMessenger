@@ -1,5 +1,5 @@
 const cacheFile = [
-  '/',
+  './',
   './index.html',
   'assets/js/main.js',
   'assets/js/Vue.js',
