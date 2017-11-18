@@ -11,6 +11,7 @@
         "operatorsAliases": false
       }
     },
+    "debug": true,
     "usessl": false,
     "sslkeypath": "./ssl/private.key",
     "sslcertpath": "./ssl/certificate.crt",

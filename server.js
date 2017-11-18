@@ -14,6 +14,9 @@ var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var Vue = require('vue').default;
 var multer = require('multer');
+var flash = flash = require('connect-flash');
+var expressVue = require('express-vue');
+
 
 //core
 var models = require('./lib/models');
@@ -74,6 +77,19 @@ app.use(session({
 	}
 }));
 
+app.use(flash());
+
+//express Vue
+var vueOptions = {
+    rootPath: path.join(__dirname,  'public', 'views'),
+    layout: {
+        start: '<div id="app">',
+        end: '</div>'
+    }
+};
+var expressVueMiddleware = expressVue.init(vueOptions);
+app.use(expressVueMiddleware);
+
 //passport ****(future feature)****
 // app.use(passport.initialize());
 // app.use(passport.session());
@@ -90,19 +106,46 @@ app.use(function(req, res, next) {
 });
 
 app.post('/register', register.registerAuth, function (req, res, next) {
-	models.User.create({
-		nick: req.body.nick,
-		account: req.body.account,
-		password: req.body.password,
-		firstname: req.body.firstname,
-		lastname: req.body.lastname
-	}).then(function (result) {
-		console.log("success");
-		res.redirect('/');
-	}).catch(function(err){
-		console.log(err);
-		res.redirect('/register.html');
+	models.User.findOrCreate({
+		where: {
+			account: req.body.account
+		},
+		defaults: {
+			nick: req.body.nick,
+			password: req.body.password,
+			firstname: req.body.firstname,
+			lastname: req.body.lastname
+		}
+	}).spread(function (user, created) {
+		if (user) {
+			if (created) {
+				if (config.debug) logger.info('user registered: ' + user.id);
+				req.flash('info', "You've successfully registered, please signin.");
+			} else {
+				if (config.debug) logger.info('user found: ' + user.id);
+				req.flash('error', "This account has been used, please try another one.");
+			}
+			return res.redirect('/');
+		}
+		req.flash('error', "Failed to register your account, please try again.");
+		return res.redirect(config.serverurl + '/register');
+	}).catch(function (err) {
+		logger.error('auth callback failed: ' + err);
+		return res.redirect('/register');
 	});
+	// models.User.create({
+	// 	nick: req.body.nick,
+	// 	account: req.body.account,
+	// 	password: req.body.password,
+	// 	firstname: req.body.firstname,
+	// 	lastname: req.body.lastname
+	// }).then(function (result) {
+	// 	console.log("success");
+	// 	res.redirect('/');
+	// }).catch(function(err){
+	// 	console.log(err);
+	// 	res.redirect('/register.html');
+	// });
 });
 
 var wav = multer({ dest: 'wav/' });
