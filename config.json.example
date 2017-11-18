@@ -1,0 +1,18 @@
+{
+  "development": {
+    "db": {
+      "username": "root",
+      "password": "admin",
+      "database": "voice",
+      "options": {
+        "dialect": "mysql",
+        "host": "localhost",
+        "operatorsAliases": false
+      }
+    },
+    "usessl": false,
+    "sslkeypath": "./ssl/private.key",
+    "sslcertpath": "./ssl/certificate.crt",
+    "sslcapath": "./ssl/ca_bundle.crt"
+  }
+}

@@ -1,48 +1,143 @@
 var express = require('express');
-var https = require('https');
-var http = require('http');
 var fs = require('fs');
-var app = express();
-var port = 9907;
+var path = require('path');
+var helmet = require('helmet');
+var passport = require('passport');
+var morgan = require('morgan');
+var compression = require('compression');
 
-var bodyparser = require('body-parser');
+var Vue = require('vue').default;
+var bodyParser = require('body-parser');
 var multer = require('multer');
 
-var options = {
-		ca: fs.readFileSync('./ssl/ca_bundle.crt'),
-		key: fs.readFileSync('./ssl/private.key'),
-		cert: fs.readFileSync('./ssl/certificate.crt')
-		//requestCert: false,
-		//rejectUnauthorized: false
-};
+var models = require('./lib/models');
+var register = require('./lib/register');
+var config = require('./lib/config');
+var logger = require('./lib/logger')
 
-http.createServer(app).listen(9908);
-https.createServer(options, app).listen(port);
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-app.use(express.static(__dirname+'/public'));
-//app.listen(port);
-//var server = https.createServer(options, app).listen(port, function(){
-//  console.log("server started");
-//});  
-/*
-app.post('blob', (req, res) => {
-  req.pipe(fs.createWriteStream('public/myFile.wav'))
-    .on('error', (e) => res.status(500).end(e.message))
-    .on('close', () => res.end('File saved'))
+//server setup
+if (config.usessl) {
+    var options = {
+		ca: fs.readFileSync(config.sslcapath, 'utf8'),
+		key: fs.readFileSync(config.sslkeypath, 'utf8'),
+		cert: fs.readFileSync(config.sslcertpath, 'utf8'),
+        requestCert: false,
+        rejectUnauthorized: false
+    };
+    var app = express();
+    var server = require('https').createServer(options, app);
+} else {
+    var app = express();
+    var server = require('http').createServer(app);
+}
+
+//logger
+app.use(morgan('combined', {
+    "stream": logger.stream
+}));
+
+//json parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//session store
+var sessionStore = new SequelizeStore({
+    db: models.sequelize
 });
-*/
 
-var wav = multer({dest:'wav/'});
-app.post('/wav',wav.single('wav'),function(req,res){
+//compression
+app.use(compression());
+
+//for security
+app.use(helmet());
+
+app.use(cookieParser());
+
+//route without 'html' extension
+app.use(express.static(path.join(__dirname, 'public'), { index: false, extensions: ['html'] }));
+
+//session
+app.use(session({
+	secret: config.sessionsecret,
+	store: sessionStore,
+	resave: false, //don't save session if unmodified
+	saveUninitialized: true, //always create session to ensure the origin
+	rolling: true, // reset maxAge on every response
+	cookie: {
+		maxAge: config.sessionlife
+	}
+}));
+
+//passport ****(future feature)****
+// app.use(passport.initialize());
+// app.use(passport.session());
+
+// check uri is valid before going further
+app.use(function(req, res, next) {
+    try {
+        decodeURIComponent(req.path);
+    } catch (err) {
+        logger.error(err);
+        return response.errorBadRequest(res);
+    }
+    next();
+});
+
+app.post('/register', register.registerAuth, function (req, res, next) {
+	models.User.create({
+		nick: req.body.nick,
+		account: req.body.account,
+		password: req.body.password,
+		firstname: req.body.firstname,
+		lastname: req.body.lastname
+	}).then(function (result) {
+		console.log("success");
+		res.redirect('/');
+	}).catch(function(err){
+		console.log(err);
+		res.redirect('/register.html');
+	});
+});
+
+var wav = multer({ dest: 'wav/' });
+app.post('/wav', wav.single('wav'), function (req, res) {
 	console.log(req.headers);
 	console.log(req.file);
 	res.sendStatus(200);
 });
 
-var mp3 = multer({dest:'mp3/'});
-app.post('/mp3',mp3.single('mp3'),function(req,res){
+var mp3 = multer({ dest: 'mp3/' });
+app.post('/mp3', mp3.single('mp3'), function (req, res) {
 	console.log(req.headers);
 	console.log(req.file);
 	res.sendStatus(200);
 });
 
+app.use(function (req, res, next) {
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
+});
+
+app.use(function (err, req, res, next) {
+	res.status(err.status || 500);
+	res.send(err.status + " " + err.message)
+});
+
+//listen
+function startListen() {
+	server.listen(config.port, function () {
+        var schema = config.usessl ? 'HTTPS' : 'HTTP';
+        logger.info('%s Server listening at port %d', schema, config.port);
+        config.maintenance = false;
+    });
+}
+
+// sync db then start listen
+models.sequelize.sync({ force: true }).then(function () {
+	startListen();
+});
