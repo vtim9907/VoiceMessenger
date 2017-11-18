@@ -1,5 +1,6 @@
 {
   "development": {
+    "port": 9907,
     "db": {
       "username": "root",
       "password": "admin",

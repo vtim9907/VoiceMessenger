@@ -1,3 +1,6 @@
+//app
+
+//external modules
 var express = require('express');
 var fs = require('fs');
 var path = require('path');
@@ -5,19 +8,18 @@ var helmet = require('helmet');
 var passport = require('passport');
 var morgan = require('morgan');
 var compression = require('compression');
-
-var Vue = require('vue').default;
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var Vue = require('vue').default;
 var multer = require('multer');
 
+//core
 var models = require('./lib/models');
 var register = require('./lib/register');
 var config = require('./lib/config');
 var logger = require('./lib/logger')
-
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 //server setup
 if (config.usessl) {
