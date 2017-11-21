@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/vtim9907/VoiceMessenger#readme",
   "dependencies": {
+    "blueimp-md5": "^2.10.0",
     "compression": "^1.7.1",
     "connect-flash": "^0.1.1",
     "connect-session-sequelize": "^5.0.1",
@@ -33,7 +34,12 @@
     "mysql": "^2.15.0",
     "mysql2": "^1.5.0",
     "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "randomcolor": "^0.5.3",
+    "scrypt": "^6.0.3",
     "sequelize": "^4.22.8",
+    "update": "^0.7.4",
+    "validator": "^9.1.1",
     "vue": "^2.5.5",
     "winston": "^2.4.0"
   }

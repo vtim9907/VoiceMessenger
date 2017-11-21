@@ -14,15 +14,17 @@ var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var Vue = require('vue').default;
 var multer = require('multer');
-var flash = flash = require('connect-flash');
+var flash = require('connect-flash');
 var expressVue = require('express-vue');
-
+var validator = require('validator');
 
 //core
 var models = require('./lib/models');
 var register = require('./lib/register');
 var config = require('./lib/config');
-var logger = require('./lib/logger')
+var logger = require('./lib/logger');
+var auth = require('./lib/auth');
+// var response = require('./lib/response');
 
 //server setup
 if (config.usessl) {
@@ -62,8 +64,7 @@ app.use(helmet());
 
 app.use(cookieParser());
 
-//route without 'html' extension
-app.use(express.static(path.join(__dirname, 'public'), { index: false, extensions: ['html'] }));
+app.use(express.static(path.join(__dirname, 'public', 'assets')));
 
 //session
 app.use(session({
@@ -79,20 +80,39 @@ app.use(session({
 
 app.use(flash());
 
-//express Vue
-var vueOptions = {
-    rootPath: path.join(__dirname,  'public', 'views'),
-    layout: {
-        start: '<div id="app">',
-        end: '</div>'
-    }
-};
-var expressVueMiddleware = expressVue.init(vueOptions);
-app.use(expressVueMiddleware);
+// //express Vue
+// var vueOptions = {
+//     rootPath: path.join(__dirname,  'public', 'views'),
+//     layout: {
+//         start: '<div id="app">',
+//         end: '</div>'
+//     }
+// };
+// var expressVueMiddleware = expressVue.init(vueOptions);
+// app.use(expressVueMiddleware);
 
-//passport ****(future feature)****
-// app.use(passport.initialize());
-// app.use(passport.session());
+//passport 
+app.use(passport.initialize());
+app.use(passport.session());
+
+//serialize and deserialize
+passport.serializeUser(function (user, done) {
+    logger.info('serializeUser: ' + user.id);
+    return done(null, user.id);
+});
+passport.deserializeUser(function (id, done) {
+    models.User.findOne({
+        where: {
+            id: id
+        }
+    }).then(function (user) {
+        logger.info('deserializeUser: ' + user.id);
+        return done(null, user);
+    }).catch(function (err) {
+        logger.error(err);
+        return done(err, null);
+    });
+});
 
 // check uri is valid before going further
 app.use(function(req, res, next) {
@@ -105,47 +125,111 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.post('/register', register.registerAuth, function (req, res, next) {
-	models.User.findOrCreate({
+function checkAuthentication(req, res, next) {
+	if(req.isAuthenticated()){
+		next();
+	} else {
+		console.log('not login');
+		return res.redirect('/login');
+	}
+}
+
+app.get("/givename", function(req, res, next) {
+	models.User.findOne({
 		where: {
-			account: req.body.account
-		},
-		defaults: {
-			nick: req.body.nick,
-			password: req.body.password,
-			firstname: req.body.firstname,
-			lastname: req.body.lastname
+			id: req.session.passport.user
 		}
-	}).spread(function (user, created) {
-		if (user) {
-			if (created) {
-				if (config.debug) logger.info('user registered: ' + user.id);
-				req.flash('info', "You've successfully registered, please signin.");
-			} else {
-				if (config.debug) logger.info('user found: ' + user.id);
-				req.flash('error', "This account has been used, please try another one.");
-			}
-			return res.redirect('/');
-		}
-		req.flash('error', "Failed to register your account, please try again.");
-		return res.redirect(config.serverurl + '/register');
+	}).then(function (user) {
+		return res.send("Welcome, " + user.nickname + " !!");
 	}).catch(function (err) {
-		logger.error('auth callback failed: ' + err);
-		return res.redirect('/register');
+		logger.error(err);
+		return done(err);
 	});
-	// models.User.create({
-	// 	nick: req.body.nick,
-	// 	account: req.body.account,
-	// 	password: req.body.password,
-	// 	firstname: req.body.firstname,
-	// 	lastname: req.body.lastname
-	// }).then(function (result) {
-	// 	console.log("success");
-	// 	res.redirect('/');
-	// }).catch(function(err){
-	// 	console.log(err);
-	// 	res.redirect('/register.html');
-	// });
+});
+
+app.get("/login", function(req, res, next) {
+	if (req.isAuthenticated()) {
+		return res.redirect('/');
+	}
+	return res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get("/register", checkAuthentication, function(req, res, next) {
+	return res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/', checkAuthentication, function(req, res, next) {
+	return res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+function setReturnToFromReferer(req) {
+    var referer = req.get('referer');
+    if (!req.session) req.session = {};
+    req.session.returnTo = referer;
+}
+
+// email auth
+if (config.email) {
+    if (config.allowemailregister)
+        app.post('/register', function (req, res, next) {
+            if (!req.body.email || !req.body.password) return res.redirect('/login');
+            if (!validator.isEmail(req.body.email)) return res.redirect('/login');
+            models.User.findOrCreate({
+                where: {
+                    email: req.body.email
+                },
+                defaults: {
+					password: req.body.password,
+					nickname: req.body.nickname
+                }
+            }).spread(function (user, created) {
+                if (user) {
+                    if (created) {
+                        if (config.debug) logger.info('user registered: ' + user.id);
+						req.flash('info', "You've successfully registered, please signin.");
+						console.log('register successfully.');
+                    } else {
+                        if (config.debug) logger.info('user found: ' + user.id);
+						req.flash('error', "This email has been used, please try another one.");
+						console.log('This email has been used.');
+                    }
+                    return res.redirect('/login');
+				}
+				console.log('fail to register');
+                req.flash('error', "Failed to register your account, please try again.");
+                return res.redirect('/login');
+            }).catch(function (err) {
+                logger.error('auth callback failed: ' + err);
+				// return response.errorInternalError(res);
+				return res.send('internal error');
+            });
+        });
+
+    app.post('/login', function (req, res, next) {
+        if (!req.body.email || !req.body.password) return res.send('empty field occured');
+		if (!validator.isEmail(req.body.email)) return res.send('not email');
+		setReturnToFromReferer(req);
+		next()},
+        passport.authenticate('local', {
+            failureRedirect: '/login',
+            failureFlash: 'Invalid email or password.'
+		}),
+		function(req, res, next) {
+			req.session.save(() => {
+				return res.redirect('/');
+			});
+		}
+    );
+}
+
+
+//logout
+app.get('/logout', function (req, res) {
+	console.log('hello');
+    if (config.debug && req.isAuthenticated())
+		logger.info('user logout: ' + req.user.id);
+    req.logout();
+    return res.redirect('/login');
 });
 
 var wav = multer({ dest: 'wav/' });

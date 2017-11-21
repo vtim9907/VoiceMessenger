@@ -7,8 +7,8 @@ window.onload = function(){
 		template: '#head_bar',
 		data: function(){
 			return {
-				buttonList : ['註冊','抽卡','好友','聊天','錄音'],
-				viewList : ['reg','card','friend','chat','record']
+				buttonList : ['註冊','抽卡','好友','聊天','錄音','登出'],
+				viewList : ['reg','card','friend','chat','record','logout']
 			};
 		},
 		methods: {
@@ -25,8 +25,8 @@ window.onload = function(){
 		template: '#left_page',
 		data: function(){
 			return {
-				buttonList : ['註冊','抽卡','好友','聊天','錄音'],
-				viewList : ['reg','card','friend','chat','record'],
+				buttonList : ['註冊','抽卡','好友','聊天','錄音','登出'],
+				viewList : ['reg','card','friend','chat','record','logout'],
 				seen: true,
 				introList : ['暱稱','興趣','其他']
 			};
@@ -62,6 +62,11 @@ window.onload = function(){
 	var chat = Vue.extend({
 		template: '<h1>聊天</h1>'
 	});
+
+	var logout = Vue.extend({
+		template: '<a href="/logout">按我登出XDDD</a>'
+	});
+
 
 	var record = Vue.extend({
 		template: '#record',
@@ -254,7 +259,8 @@ window.onload = function(){
 			card: card,
 			friend: friend,
 			chat: chat,
-			record: record
+			record: record,
+			logout: logout
 		},
 		created: function(){
 			var a = this;
