@@ -65,6 +65,9 @@ app.use(helmet());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public', 'assets')));
+app.use('/service_worker.js', express.static(path.join(__dirname, 'public', 'service_worker.js')));
+app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json')));
+app.use('/notConnect.html', express.static(path.join(__dirname, 'public', 'notConnect.html')));
 
 //session
 app.use(session({
