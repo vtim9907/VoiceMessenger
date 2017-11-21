@@ -165,6 +165,10 @@ app.get('/', checkAuthentication, function(req, res, next) {
 	return res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/index.html', checkAuthentication, function(req, res, next) {
+  return res.sendFile(path.join(__dirname, 'public', 'index.html'));
+}); 
+
 function setReturnToFromReferer(req) {
     var referer = req.get('referer');
     if (!req.session) req.session = {};
