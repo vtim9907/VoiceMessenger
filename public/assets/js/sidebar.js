@@ -41,7 +41,10 @@
 })
 
 
-
+window.addEventListener("load",()=>{
+ sidebar.response();
+ mainPage.response();
+})
 function responsive (){
   sidebar.response();
   mainPage.response();

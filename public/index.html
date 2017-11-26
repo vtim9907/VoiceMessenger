@@ -1,15 +1,16 @@
-
 <!doctype html>
   <html lang="en" style='margin:0'>
     <head>
-    <title>Hello, world!</title>
-    <!-- Required meta tags -->
+  <title>index</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-  </head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+     <link href="assets/css/main.css" rel="stylesheet">
+     <link rel="manifest" href="./manifest.json">
+     <script type="text/javascript" src="assets/js/Vue.js"></script>
+     <script type="text/javascript" src="assets/js/lame.all.js"></script>
+     <script type="text/javascript" src="assets/js/RecordRTC.js"></script>
+     <script type="text/javascript" src="./service_worker.js"></script>
+   </head>
   <body onresize='responsive()' class='bd-drak'>
      <div class='wrapper' >
         <nav class="navbar navbar-expand-md flex-column navbar-dark bg-primary"  :style='styleObject' id='sidebar' >
@@ -36,41 +37,45 @@
             <li class="nav-item">
             <a class="nav-link disabled" href="#">  設 定  </a>
             </li>
-          </ul>
+         
+            </ul>
           </div>
         </nav>
       </div>
+      
       <div  id='mainPage' :style='styleObject'>
-       <div class='col-12'  id="app" >
+      
+      <div class='col-12'  id="app" >
 	       <record></record>
        </div>
+      
       </div>
-        <script type="text/x-template" id="record">
-	      	<div>
-	      		<canvas class="w-50 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
-		      	<audio class="col-8" :id="i" controls v-for="i in audioList"></audio>
-		       	<div class="btn-group">
-		    	  	<button type="button" class="btn" @click="start()" value="start">start</button>
-			      	<button type="button" class="btn" @click="stop()" value="stop">stop</button>
-              <!--
-			      	<button type="button" class="btn" @click="download()" value="play">download</button>
-              -->
-			      	<button type="button" class="btn" @click="send()" value="send">send wav</button>
-			      	<button type="button" class="btn" @click="mp3()" value="mp3">mp3</button>
-			      	<button type="button" class="btn" @click="sendMp3()" value="sendMp3">sendMp3</button>	
-		      	</div>
-          </div	>		
-        </script>
-     
+
+      <script type="text/x-template" id="record">
+	      <div>
+	      	<canvas class="w-50 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
+		      <audio class="col-8" :id="i" controls v-for="i in audioList"></audio>
+		      <div class="btn-group">
+            <button type="button" class="btn" @click="start()" value="start">start</button>
+            <button type="button" class="btn" @click="stop()" value="stop">stop</button>
+            <!--
+            <button type="button" class="btn" @click="download()" value="play">download</button>
+            -->
+            <button type="button" class="btn" @click="send()" value="send">send wav</button>
+            <button type="button" class="btn" @click="mp3()" value="mp3">mp3</button>
+            <button type="button" class="btn" @click="sendMp3()" value="sendMp3">sendMp3</button>	
+          </div>
+        </div	>		
+      </script>
      
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
     <script type='text/javascript' src='assets/js/sidebar.js'></script>
     <script type="text/javascript" src="assets/js/record.js"></script>
     <script type="text/javascript" src="assets/js/register.js"></script>  
+    <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
  </body>
 </html>
