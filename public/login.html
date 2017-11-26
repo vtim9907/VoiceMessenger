@@ -1,0 +1,171 @@
+<html>
+<meta charset="utf-8">
+
+<head>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/Vue.js"></script>
+    <script type="text/javascript" src="/service_worker.js"></script>
+    <script type="text/javascript" src="js/register.js"></script> 
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light">
+        <div class="container-fluid">
+            <nav class="navbar navbar-light">
+                <a class="navbar-brand" href="#">
+                    <img src="img/favicon.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                </a>
+            </nav>
+            <div class="navbar-right btn-group" id="btns">
+                <!-- <a href="login"> -->
+                    <button type="button" class="btn-success" id="login_btn" @click="goPath('login')">登入</button>
+                <!-- </a>
+                <a href="register"> -->
+                    <button type="button" class="btn-success" id="register_btn" @click="goPath('register')">註冊</button>
+                <!-- </a> -->
+            </div>
+        </div>
+    </nav>
+    <div class="container paddingTop" id="form-container">
+
+        <keep-alive>
+            <component :is="view"></component>
+        </keep-alive>
+
+    </div>
+
+    <script type="text/x-template" id="login_form">
+        <form class="form-horizontal" action="./login" method="POST">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">信箱：</label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" v-model="email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">密碼：</label>
+                <div class="col-sm-10">
+                    <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password">
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit">登入</button>
+            </div>
+        </form>
+    </script>
+
+    <script type="text/x-template" id="register_form">
+        <form class="form-horizontal" action="/register" method="POST">
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">信箱：</label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" v-model="email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">密碼：</label>
+                <div class="col-sm-10">
+                    <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">暱稱：</label>
+                <div class="col-sm-10">
+                    <input type="text" name="nickname" class="form-control" v-model="nickname">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">姓氏：</label>
+                <div class="col-sm-10">
+                    <input type="text" name="lastname" class="form-control" v-model="lastname">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-sm-2 text-right">名字：</label>
+                <div class="col-sm-10">
+                    <input type="text" name="firstname" class="form-control" v-model="firstname">
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit">註冊</button>
+            </div>
+        </form>
+    </script>
+
+    <script>
+        Vue.component('loginView', {
+            template: '#login_form',
+            data: function () {
+                return {
+                    email: '',
+                    password: '',
+                }
+            },
+            deactivated() {
+                this.password = ''; 
+            }
+        });
+
+        Vue.component('registerView', {
+            template: '#register_form',
+            data: function () {
+                return {
+                    email: '',
+                    password: '',
+                    nickname: '',
+                    firstname: '',
+                    lastname: ''
+                }
+            },
+            deactivated() {
+                this.password = '';
+            }
+        })
+
+        var bus = new Vue();
+
+        new Vue({
+            el: '#btns',
+            data: {
+                path: 'login'
+            },
+            methods: {
+                goPath: function(path) {
+                    this.path = path;
+                    bus.$emit('updateView', path);
+                    window.history.pushState({path: path}, "", path);
+                }
+            }
+        })
+
+        window.onpopstate = function(event) {
+            if (event.state && event.state.path) {
+                bus.$emit('updateView', event.state.path);
+            } else { // event.state == null
+                bus.$emit('updateView', 'login');
+            }
+        }
+
+        new Vue({
+            el: "#form-container",
+            data: {
+                view: 'loginView'
+            },
+            created() {
+                let self = this;
+                bus.$on('updateView', function(path) {
+                    self.view = path + "View";
+                })
+            }
+        })
+    </script>
+
+</body>
+
+</html>

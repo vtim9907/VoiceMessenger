@@ -1,14 +1,5 @@
 const cacheFile = [
-  './',
-  './index.html',
-  'assets/js/main.js',
-  'assets/js/Vue.js',
-  'assets/js/register.js',
-	'assets/js/lame.all.js',
-	'assets/js/RecordRTC.js',
-  'assets/css/main.css',
-	'assets/css/font-awesome.min.css',
-  'assets/img/logo-voiceMessage.png'
+  '/notConnect.html'
 ]
 
 const cacheKey = 'demo-app-v1'

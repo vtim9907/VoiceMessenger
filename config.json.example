@@ -1,0 +1,23 @@
+{
+  "development": {
+    "port": 9907,
+    "db": {
+      "username": "root",
+      "password": "admin",
+      "database": "voice",
+      "options": {
+        "dialect": "mysql",
+        "host": "localhost",
+        "operatorsAliases": false
+      }
+    },
+    "debug": true,
+    "email": true,
+    "allowemailregister": true,
+    "debug": true,
+    "usessl": false,
+    "sslkeypath": "./ssl/private.key",
+    "sslcertpath": "./ssl/certificate.crt",
+    "sslcapath": "./ssl/ca_bundle.crt"
+  }
+}
