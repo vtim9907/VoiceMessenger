@@ -70,6 +70,51 @@
 			<div is="right_page"></div>
 		</div>
 	</script>
+  <script type="text/x-template" id="card">
+    <center>
+      <div class="card text-center" style="width:25vw ;">
+        <img class="card-img-top" src=" https://goo.gl/eKdiuU" >
+        <div class="card-body">
+          <h1 class="card-title">{{name}}</h1>
+        </div>
+        <div class="card-body">
+          <button type="button" class="btn btn-default btn-lg">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> 播放
+          </button>
+        </div>
+        <br><br>
+        <a href="#" class="btn btn-primary">送出邀請</a>
+      </div>
+   </center>  
+  </script>
+  <script type="text/x-template" id="chat">
+
+
+<dic class="userListContainer col-sm-3">
+<div class="row">
+<div class="panel-heading">
+<span class="glyphicon glyphicon-user">　<span id="chatMemberText">聊天列表</span></span>
+</div>
+<div class="userlist-body">
+<li class="user" ><a href="#">　<img src="https://goo.gl/eKdiuU" class="userthumbnail">　<span>小智</span></a></li>
+</div>
+</div>
+</div>
+<div class="chatContainer col-sm-7">        <div class="row">
+<div class="panel-heading">
+<span class="glyphicon glyphicon-comment"></span>　<span id="chatroomNameText">聊天室</span><span class="name">Doge</span>
+</div> 
+<section class="messageFlow">
+</section>
+<div class="inputContainer">
+<form action="">
+<input id="imgfromdisk" type="image" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png">
+<input id="message" autocomplete="off" placeholder="Type your message..."><button id="send">Send</button>
+</form>
+</div>
+</div>
+</div
+</script>
 
 	<script type="text/x-template" id="record">
 		<div class="row justify-content-center">

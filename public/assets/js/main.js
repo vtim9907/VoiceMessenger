@@ -51,16 +51,37 @@ window.onload = function(){
 		template: '<h1>註冊</h1>'
 	});
 
-	var card = Vue.extend({
-		template: '<h1>抽卡</h1>'
-	});
+  var card = Vue.extend({
+    template: '#card',
+        data: function(){
+              return {               
+                name:'王小明'
+              };
+    } 
+  });
 
 	var friend = Vue.extend({
 		template: '<h1>好友</h1>'
 	});
 
 	var chat = Vue.extend({
-		template: '<h1>聊天</h1>'
+			template: '#chat',
+        data: function(){
+              return{
+                 Friend: [
+                  {
+                  name:'小明',
+                  pho:'https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg'
+                  },
+                  {
+                  name:'小智',
+                  pho:'https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg'
+                  }
+               ]
+                 
+         
+              };
+        }      
 	});
 
 	var record = Vue.extend({
