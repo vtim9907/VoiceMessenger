@@ -1,4 +1,3 @@
-window.onload = function(){
   var card = Vue.extend({
     template: '#card',
         data: function(){
@@ -7,4 +6,4 @@ window.onload = function(){
               };
         } 
   })	
-}
+
