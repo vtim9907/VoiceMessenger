@@ -86,6 +86,25 @@
 			
 		</div>
 	</script>
+
+	<script type="text/x-template" id="chat">
+		<div class="row h-100">
+			<div class="col-4">
+				<ul class="list-group" style="overflow:scroll;">
+					<li class="list-group-item" v-for="i in userList" @click="selectReceiver(i)">{{i}}</li>
+				</ul>
+
+			</div>
+			<div class="col-8">
+				<ul class="w-100 border border-dark h-75 list-group" style="overflow:scroll;">
+					<li class="list-group-item" v-for="i in content">{{i}}</li>
+				</ul>
+				<input type="text" name="test">
+				<button @click="send()">send to {{user}}</button>
+			</div>
+		</div>
+	</script>
+
 	<script>
 			$(document).ready(function() {
 				$.ajax({
@@ -101,6 +120,7 @@
 				});
 			});
 	</script>
+<script type="text/javascript" src="js/chat.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

@@ -58,11 +58,11 @@ window.onload = function(){
 	var friend = Vue.extend({
 		template: '<h1>好友</h1>'
 	});
-
+	/*
 	var chat = Vue.extend({
 		template: '<h1>聊天</h1>'
 	});
-
+	*/
 	var logout = Vue.extend({
 		template: '<a href="/logout">按我登出XDDD</a>'
 	});

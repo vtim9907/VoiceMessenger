@@ -239,6 +239,92 @@ app.get('/logout', function (req, res) {
     return res.redirect('/login');
 });
 
+app.get('/chat',function(req,res){
+    console.log(req.query);
+    console.log(req.session);
+    models.User.findOne({
+        where: {
+            nickname : req.query.toUser
+        }
+    }).then(function(user){
+        console.log(user.id);
+        models.Chat.create({
+            fromId: req.session.passport.user,
+            toId: user.id,
+            content: req.query.msg,
+            time: new Date
+        });
+    });
+    /*
+    models.Chat.create({
+        fromId: req.session.passport.user,
+        toId: models.User.findAll({
+            where:
+        }),
+    });
+    */
+    res.send(200);
+});
+
+app.get('/userList',function(req,res){
+    
+    models.User.findAll().then(function(users){
+        var userList = [];
+        for(var i in users){//users is a list
+            console.log('session '+req.session.passport.user);
+            if(req.session.passport.user !== users[i].id){
+                userList.push(users[i].nickname);
+            }
+            console.log(users[i].nickname);
+            console.log(userList);
+        }
+        res.send(userList);
+    });
+    
+});
+var Sequelize = require('sequelize');
+app.get('/chatMsg',function(req,res){
+    var Op = Sequelize.Op;
+    models.User.findOne({
+        where:{
+            nickname: req.query.to
+        }
+    }).then(function(user){
+        models.Chat.findAll({
+            where: {
+                //toId : req.session.passport.user
+                [Op.or]:[{fromId:req.session.passport.user,toId:user.id},
+                    {fromId:user.id,toId:req.session.passport.user}]
+            }
+        }).then(function(msgs){
+            var contents = [];
+            for(var i in msgs){
+                console.log(msgs[i].content);
+                contents.push(msgs[i].content);
+            }
+            res.send(contents);
+        });
+    });
+    /*
+    models.Chat.findAll({
+        where: {
+            //toId : req.session.passport.user
+            [Op.or]:[{fromId:req.session.passport.user},
+                {toId:req.session.passport.user}]
+        }
+    }).then(function(msgs){
+        var contents = [];
+        for(var i in msgs){
+            console.log(msgs[i].content);
+            contents.push(msgs[i].content);
+        }
+        res.send(contents);
+    });
+    */
+});
+
+
+
 var wav = multer({ dest: 'wav/' });
 app.post('/wav', wav.single('wav'), function (req, res) {
 	console.log(req.headers);
@@ -273,7 +359,10 @@ function startListen() {
     });
 }
 
+
+
+
 // sync db then start listen
-models.sequelize.sync({ force: true }).then(function () {
+models.sequelize.sync({ force: false }).then(function () {//change true to false for debug
 	startListen();
 });
