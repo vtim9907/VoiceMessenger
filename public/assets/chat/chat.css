@@ -1,0 +1,101 @@
+#chat
+{
+background: #E8FFFF;
+height: auto;
+}
+.modal-content
+{
+background-color: #CCCCFF;
+}
+li
+{
+list-style: none;
+}
+.userListContainer
+{
+margin: 3%;
+border: 1px #C9FFFF solid;
+background: #fff;
+height: 740px;
+overflow-y: auto;
+}
+.panel-heading
+{
+background: #96FFFF;
+}
+.userthumbnail
+{
+width: 55px;
+height: 55px;
+display: inline-block;
+border-radius: 8%;
+}
+li a
+{
+text-decoration: none;
+color: #000;
+&:hover
+{
+text-decoration: none;
+color: #fff;
+}
+}
+.user
+{
+margin-top: 1%;
+height: 55px;
+font-size: 20px;
+margin-bottom: 2%;
+}
+.chatContainer
+{
+margin-top: 3%;
+border: 1px #C9FFFF solid;
+height: 740px;
+background: #fff;
+}
+.messageFlow
+{
+background: #FAFAFA;
+overflow-y: auto;
+height: 610px;
+}
+.name
+{
+margin-left: 45%;
+}
+form
+{
+height: 130px;
+background: #FAFAFA;
+border: 1px #C9FFFF solid;
+}
+#message
+{
+margin: 1% 0 1% 1%;
+width: 80%;
+height: 68px;
+font-size: 18px;
+}
+#send
+{
+border: none;
+background: #B8B8FF;
+margin: 1% 0 1% 1%;
+width:10%;
+height: 68px;
+}
+#imgfromdisk
+{
+margin-top: 1%;
+width: 5%;
+height: 40px
+}                                                                                  
+section div
+{
+max-width: 600px;
+word-wrap: break-word;
+word-break: normal;
+margin-bottom: 20px;
+line-height: 15px;
+}
