@@ -7,17 +7,20 @@ var chat = Vue.extend({
             userList:[],
             content:[],
             user:'',
-            inter:{}
+            inter:{},
+            socket:{}
         }
     },
     methods: {
         send: function(){
             this.msg = $("[name='test']").val();
             console.log(this.msg);
-            $.get('/chat',{msg: this.msg, toUser: this.user});
+            //$.get('/chat',{msg: this.msg, toUser: this.user});
+            this.socket.emit('chat',{msg: this.msg, toUser: this.user});
         },
         selectReceiver: function(user){
             this.user = user;
+            this.socket.emit('getChatContent',{toUser: this.user});
         },
         getMsg: function(){
             var self = this;
@@ -33,6 +36,7 @@ var chat = Vue.extend({
             self.userList = data;
 
             self.user = self.userList[0];
+            self.socket.emit('getChatContent',{toUser: self.user});
         });
         //this.user = this.userList[0];
         /*
@@ -41,9 +45,21 @@ var chat = Vue.extend({
             self.content = data;
         });
         */
-        this.inter = setInterval(this.getMsg,500);
+        //this.inter = setInterval(this.getMsg,500);
+        this.socket = io.connect();
+        /*
+        this.socket.on('message',function(data){
+            console.log(data.message);
+        });
+        */
+        this.socket.on('chatContent',function(data){
+            self.content = data.content;
+        });
+
+        
+        
     },
     deactivated: function(){
-        clearInterval(this.inter);
+        //clearInterval(this.inter);
     }
 });

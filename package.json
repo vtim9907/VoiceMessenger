@@ -38,6 +38,7 @@
     "randomcolor": "^0.5.3",
     "scrypt": "^6.0.3",
     "sequelize": "^4.22.8",
+    "socket.io": "^2.0.4",
     "update": "^0.7.4",
     "validator": "^9.1.1",
     "vue": "^2.5.5",

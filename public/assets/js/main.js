@@ -67,7 +67,7 @@ window.onload = function(){
 		template: '<a href="/logout">按我登出XDDD</a>'
 	});
 
-
+	/*
 	var record = Vue.extend({
 		template: '#record',
 		data: function(){
@@ -149,7 +149,7 @@ window.onload = function(){
 		  		}
 		  		//encodeMono(1, wav.sampleRate, left);
 		  		a.encodeStereo(2, wav.sampleRate, samples);
-		  		/*
+		  		//*
 		  		var streamArray = new Int16Array(fileReader.result);
 		  		var buffer = [];
 		  		var mp3Encoder = new lamejs.Mp3Encoder(1, 44100, 128);
@@ -162,7 +162,7 @@ window.onload = function(){
 
 		  		var mp3p = document.getElementById('mp3');
 		  		mp3p.src = window.URL.createObjectURL(blob);
-		  		*/
+		  		//
 		  	}
 		  	fileReader.readAsArrayBuffer(window.recordRTC.blob);
 		  },
@@ -246,7 +246,7 @@ window.onload = function(){
 	    }
 	  	}
 	});
-
+	*/
 	var right_page = Vue.extend({
 		template: '#right_page',
 		data: function(){
