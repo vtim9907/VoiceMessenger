@@ -1,69 +1,4 @@
-window.onload = function(){
-
-
-	var bus = new Vue();//用於事件傳遞
-
-	Vue.component('head_bar',{
-		template: '#head_bar',
-		data: function(){
-			return {
-				buttonList : ['註冊','抽卡','好友','聊天','錄音'],
-				viewList : ['reg','card','friend','chat','record']
-			};
-		},
-		methods: {
-			hideLeft : function(){
-				bus.$emit('test');
-			},
-			changeView: function(msg){
-				bus.$emit('changeView',msg);
-			}
-		}
-	});
-
-	var left_page = Vue.extend({
-		template: '#left_page',
-		data: function(){
-			return {
-				buttonList : ['註冊','抽卡','好友','聊天','錄音'],
-				viewList : ['reg','card','friend','chat','record'],
-				seen: true,
-				introList : ['暱稱','興趣','其他']
-			};
-		},
-		methods: {
-			hide : function(){
-				this.seen = !this.seen;
-			},
-			changeView: function(msg){
-				bus.$emit('changeView',msg);
-			}
-		},
-		created: function(){
-			var a = this;
-			bus.$on('test',function(){
-				a.hide();
-			})
-		}
-	});
-
-	var reg = Vue.extend({
-		template: '<h1>註冊</h1>'
-	});
-
-	var card = Vue.extend({
-		template: '<h1>抽卡</h1>'
-	});
-
-	var friend = Vue.extend({
-		template: '<h1>好友</h1>'
-	});
-
-	var chat = Vue.extend({
-		template: '<h1>聊天</h1>'
-	});
-
-	var record = Vue.extend({
+	Vue.component('record',{
 		template: '#record',
 		data: function(){
 			return {
@@ -242,50 +177,9 @@ window.onload = function(){
 	  	}
 	});
 
-	var right_page = Vue.extend({
-		template: '#right_page',
-		data: function(){
-			return {
-				currentView: 'record'
-			}
-		},
-		components: {
-			reg: reg,
-			card: card,
-			friend: friend,
-			chat: chat,
-			record: record
-		},
-		created: function(){
-			var a = this;
-			bus.$on('changeView',function(msg){
-				a.currentView = msg;
-				console.log(msg);
-			})
-		}
-	});
 
-	Vue.component('main_page',{
-		template: '#main_page',
-		components: {
-			left_page:left_page,
-			right_page:right_page
-		}
-	});
 
 
 	var app = new Vue({
 		el: '#app',
-		data: {
-			classObject : {
-				'container-fluid' : true
-			},
-			showLeft:true
-		},
-		methods: {
-			hideLeft: function(){
-				this.showLeft = !this.showLeft;
-			}
-		}
 	});
-}
