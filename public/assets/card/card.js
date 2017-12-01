@@ -7,3 +7,4 @@
         } 
   })	
 
+  Vue.component('card', card);

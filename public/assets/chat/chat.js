@@ -9,4 +9,6 @@ var chat = Vue.extend({
             ]      
         };
     }      
-})	
+})
+
+Vue.component('chat', chat);
