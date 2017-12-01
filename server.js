@@ -17,6 +17,8 @@ var multer = require('multer');
 var flash = require('connect-flash');
 var expressVue = require('express-vue');
 var validator = require('validator');
+var schedule = require('node-schedule');
+var shuffle = require('shuffle-array');
 
 //core
 var models = require('./lib/models');
@@ -25,6 +27,8 @@ var config = require('./lib/config');
 var logger = require('./lib/logger');
 var auth = require('./lib/auth');
 // var response = require('./lib/response');
+
+var dailyCardSwitch = true;
 
 //server setup
 if (config.usessl) {
@@ -277,3 +281,46 @@ function startListen() {
 models.sequelize.sync({ force: true }).then(function () {
 	startListen();
 });
+
+// big matching
+schedule.scheduleJob("*/1 * * * *", function() {
+    models.User.findAll().then(function(users) {
+        shuffle(users);
+        var group1 = users.slice(0, users.length / 2);
+        var group2 = users.slice(users.length / 2);
+
+        if (dailyCardSwitch) {
+            for (let i = 0; i < group1.length / 2; i++) {
+                console.log("\n", group1[i].id, "<--->", group2[i].id, "\n");
+                group1[i].update({
+                    card1: group2[i].id
+                });
+                group2[i].update({
+                    card1: group1[i].id
+                })
+            }
+        } else {
+            for (let i = 0; i < group1.length / 2; i++) {
+                console.log("\n", group1[i].id, "<--->", group2[i].id, "\n");
+                group1[i].update({
+                    card2: group2[i].id
+                });
+                group2[i].update({
+                    card2: group1[i].id
+                })
+            }
+        }
+    })
+})
+
+/*
+// small matching
+schedule.scheduleJob("* * 12-23 * * *", function() {
+
+})
+*/
+
+// ready to update cards
+schedule.scheduleJob("* * 0 * * *", function() {
+    dailyCardSwitch = !dailyCardSwitch;
+})
