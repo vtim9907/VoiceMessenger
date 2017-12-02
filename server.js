@@ -282,16 +282,20 @@ models.sequelize.sync({ force: true }).then(function () {
 	startListen();
 });
 
-// big matching
-schedule.scheduleJob("*/1 * * * *", function() {
+// big matching: prebuild cards of next day;
+schedule.scheduleJob("*/1 * * * *", function prebuildCard() {
     models.User.findAll().then(function(users) {
         shuffle(users);
         var group1 = users.slice(0, users.length / 2);
         var group2 = users.slice(users.length / 2);
 
+        console.log ("\ntotel users: ", users.length);
+        console.log ("group1 length: ", group1.length);
+        console.log ("group2 length: ", group2.length);
+
         if (dailyCardSwitch) {
-            for (let i = 0; i < group1.length / 2; i++) {
-                console.log("\n", group1[i].id, "<--->", group2[i].id, "\n");
+            for (let i = 0; i < group1.length; i++) {
+                console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
                 group1[i].update({
                     card1: group2[i].id
                 });
@@ -301,7 +305,7 @@ schedule.scheduleJob("*/1 * * * *", function() {
             }
         } else {
             for (let i = 0; i < group1.length / 2; i++) {
-                console.log("\n", group1[i].id, "<--->", group2[i].id, "\n");
+                console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
                 group1[i].update({
                     card2: group2[i].id
                 });
@@ -321,6 +325,6 @@ schedule.scheduleJob("* * 12-23 * * *", function() {
 */
 
 // ready to update cards
-schedule.scheduleJob("* * 0 * * *", function() {
+schedule.scheduleJob("* * 0 * * *", function switchToNextDay() {
     dailyCardSwitch = !dailyCardSwitch;
 })
