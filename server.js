@@ -17,6 +17,8 @@ var multer = require('multer');
 var flash = require('connect-flash');
 var expressVue = require('express-vue');
 var validator = require('validator');
+var schedule = require('node-schedule');
+var shuffle = require('shuffle-array');
 
 //core
 var models = require('./lib/models');
@@ -25,6 +27,8 @@ var config = require('./lib/config');
 var logger = require('./lib/logger');
 var auth = require('./lib/auth');
 // var response = require('./lib/response');
+
+var dailyCardSwitch = true;
 
 //server setup
 if (config.usessl) {
@@ -253,6 +257,38 @@ app.post('/mp3', mp3.single('mp3'), function (req, res) {
 	res.sendStatus(200);
 });
 
+app.post('/card', checkAuthentication, function(req, res) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        if (!dailyCardSwitch) {
+            return models.User.findOne({
+                where: {
+                    id: user.card1
+                }
+            })
+        } else {
+            return models.User.findOne({
+                where: {
+                    id: user.card2
+                }
+            })
+        }
+	}).then(function (user) {
+        res.json({
+            status: "success",
+            name: user.nickname
+        })
+    }).catch(function(reason) {
+        res.json({
+            status: "fail",
+            name: ""
+        })
+    })
+})
+
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
@@ -277,3 +313,51 @@ function startListen() {
 models.sequelize.sync({ force: true }).then(function () {
 	startListen();
 });
+
+// big matching: prebuild cards of next day;
+schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
+    models.User.findAll().then(function(users) {
+        shuffle(users);
+        var group1 = users.slice(0, users.length / 2);
+        var group2 = users.slice(users.length / 2);
+
+        console.log ("\ntotel users: ", users.length);
+        console.log ("group1 length: ", group1.length);
+        console.log ("group2 length: ", group2.length);
+
+        if (dailyCardSwitch) {
+            for (let i = 0; i < group1.length; i++) {
+                console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
+                group1[i].update({
+                    card1: group2[i].id
+                });
+                group2[i].update({
+                    card1: group1[i].id
+                })
+            }
+        } else {
+            for (let i = 0; i < group1.length / 2; i++) {
+                console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
+                group1[i].update({
+                    card2: group2[i].id
+                });
+                group2[i].update({
+                    card2: group1[i].id
+                })
+            }
+        }
+    })
+})
+
+/*
+// small matching
+schedule.scheduleJob("* * 12-23 * * *", function() {
+
+})
+*/
+
+// ready to update cards
+schedule.scheduleJob("*/5 * * * *", function switchToNextDay() {
+    console.log("Switch to next day !!");
+    dailyCardSwitch = !dailyCardSwitch;
+})
