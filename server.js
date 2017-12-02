@@ -257,6 +257,38 @@ app.post('/mp3', mp3.single('mp3'), function (req, res) {
 	res.sendStatus(200);
 });
 
+app.post('/card', checkAuthentication, function(req, res) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        if (!dailyCardSwitch) {
+            return models.User.findOne({
+                where: {
+                    id: user.card1
+                }
+            })
+        } else {
+            return models.User.findOne({
+                where: {
+                    id: user.card2
+                }
+            })
+        }
+	}).then(function (user) {
+        res.json({
+            status: "success",
+            name: user.nickname
+        })
+    }).catch(function(reason) {
+        res.json({
+            status: "fail",
+            name: ""
+        })
+    })
+})
+
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
@@ -283,7 +315,7 @@ models.sequelize.sync({ force: true }).then(function () {
 });
 
 // big matching: prebuild cards of next day;
-schedule.scheduleJob("*/1 * * * *", function prebuildCard() {
+schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
     models.User.findAll().then(function(users) {
         shuffle(users);
         var group1 = users.slice(0, users.length / 2);
@@ -325,6 +357,7 @@ schedule.scheduleJob("* * 12-23 * * *", function() {
 */
 
 // ready to update cards
-schedule.scheduleJob("* * 0 * * *", function switchToNextDay() {
+schedule.scheduleJob("*/5 * * * *", function switchToNextDay() {
+    console.log("Switch to next day !!");
     dailyCardSwitch = !dailyCardSwitch;
 })
