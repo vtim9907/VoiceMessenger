@@ -7,7 +7,8 @@ var sidebar=new Vue({
        position:'fixed',
        display:'flex',
        height:'100vh',
-       width:'250px'   
+       width:'250px',
+       paddind:'0'
      },
      List:["好友","聊天","抽卡","錄音"]
 
@@ -19,14 +20,16 @@ var sidebar=new Vue({
          this.styleObject.display='flex'
          this.styleObject.height='100vh'
          this.styleObject.width='250px'
+         this.styleObject.padding='0'
          
        }else{
          this.styleObject=''
        }
      },
-    show:function(i){
-       console.log(i);  
+    show:function(i){ 
+       $('#navbarNav').collapse('hide');        
        bus.$emit('PageChange',i);
+      
      }
    } 
 })

@@ -33,7 +33,9 @@
 
     <div  id='mainPage' :style='styleObject'>
 
-      <div v-if="Pageshown=='好友'">bbb</div>
+      <div v-if="Pageshown=='好友'">
+        <friends></friends>
+      </div>
     
       <div v-if="Pageshown=='聊天'">
         <chat></chat>
@@ -68,10 +70,21 @@
     </div>
     </div >   
     </script>
-
+  
+    <script type='text/x-template' id="friends">
+      <div class='row d-flex justify-content-center' style='padding:16px'>
+        <div class="col-sm-4 card" style="width: 18rem;" v-for='i in lists'>
+          <img class="card-img-top" :src="i.imgurl" alt="Card image cap">
+            <div class="card-block justify-content-center">
+              <h3 class="card-title"> {{i.name}}</h3>
+           </div>
+        </div>
+      </div>
+    </script>
+ 
     <script type="text/x-template" id="card">
       <center> 
-        <div class="card text-center" style="width:25vw ;"> 
+        <div class="card text-center" style="width:20rem;"> 
         <img class="card-img-top" src=" https://goo.gl/eKdiuU" > 
         <div class="card-body"> 
           <h1 class="card-title">{{name}}</h1> 
@@ -117,7 +130,8 @@
         </div>
       </div>
     </script>
-    <!-- Optional JavaScript -->
+
+      <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -125,6 +139,7 @@
     <script type="text/javascript" src="js/record.js"></script>
     <script type="text/javascript" src="card/card.js"></script> 
     <script type="text/javascript" src="chat/chat.js"></script> 
+    <script type="text/javascript" src="friends/friends.js"></script> 
     <script type='text/javascript' src='js/sidebar.js'></script>  
     <script type="text/javascript" src="js/register.js"></script>  
     <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
