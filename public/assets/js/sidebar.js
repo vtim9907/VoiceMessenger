@@ -10,7 +10,12 @@ var sidebar=new Vue({
        width:'250px',
        paddind:'0'
      },
-     List:["好友","聊天","抽卡","錄音"]
+     styleimg:{
+       width:'10rem',
+       display:'',
+     },
+     List:["好友","聊天","抽卡","錄音"],
+     photo:'https://goo.gl/eKdiuU'
 
    },
    methods:{
@@ -24,6 +29,7 @@ var sidebar=new Vue({
          
        }else{
          this.styleObject=''
+         this.styleimg.display='none'  
        }
      },
     show:function(i){ 
