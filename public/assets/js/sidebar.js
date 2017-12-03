@@ -10,7 +10,7 @@ var sidebar=new Vue({
        width:'250px',
        paddind:'0'
      },
-     List:["好友","聊天","抽卡","錄音"]
+     List:["編輯資料","好友","聊天","抽卡","錄音"]
 
    },
    methods:{
