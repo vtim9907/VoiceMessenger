@@ -73,15 +73,18 @@
 		<div class="row justify-content-center">
 			<canvas class="w-75 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
 			<audio class="col-12" :id="i" controls v-for="i in audioList"></audio>
+			<div class="col-12">{{recTime}}</div>
 			<div class="btn-group">
-				<button type="button" class="btn" @click="start()" value="start">start</button>
+				<button type="button" class="btn" @click="encode()" value="start">start</button>
+				<!--
 				<button type="button" class="btn" @click="stop()" value="stop">stop</button>
-        <!--
+        
 				<button type="button" class="btn" @click="download()" value="play">download</button>
-        -->
+        
 				<button type="button" class="btn" @click="send()" value="send">send wav</button>
 				<button type="button" class="btn" @click="mp3()" value="mp3">mp3</button>
-				<button type="button" class="btn" @click="sendMp3()" value="sendMp3">sendMp3</button>		
+				<button type="button" class="btn" @click="sendMp3()" value="sendMp3">sendMp3</button>
+				-->		
 			</div>
 			
 		</div>
@@ -122,7 +125,7 @@
 	</script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
 <script type="text/javascript" src="js/chat.js"></script>
-<script type="text/javascript" src="js/recorder.js"></script>
+<script type="text/javascript" src="js/record.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ var chat = Vue.extend({
             content:[],
             user:'',
             inter:{},
-            socket:{}
+            socket:undefined
         }
     },
     methods: {
@@ -46,7 +46,10 @@ var chat = Vue.extend({
         });
         */
         //this.inter = setInterval(this.getMsg,500);
-        this.socket = io.connect();
+        if(!this.socket){
+            this.socket = io.connect();
+        }
+        
         /*
         this.socket.on('message',function(data){
             console.log(data.message);

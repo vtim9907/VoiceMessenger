@@ -1,3 +1,4 @@
+
 var record = Vue.extend({
 	template: '#record',
 	data: function(){
@@ -5,7 +6,9 @@ var record = Vue.extend({
 			audioList: ['player','mp3Stereo'],
 			recordRTC: {},
 			stream: {},
-			recorder: {}
+			recorder: {},
+			recTime: 0,
+			inter: undefined
 		};
 	},
 	methods: {
@@ -78,7 +81,8 @@ var record = Vue.extend({
 		  			}
 		  		}
 		  		
-		  	}
+			  }
+			console.log(this.recordRTC);
 		  	fileReader.readAsArrayBuffer(this.recordRTC.blob);
 	    },
 	    stop: function(){
@@ -105,6 +109,23 @@ var record = Vue.extend({
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST','/mp3',true);
 			xhr.send(f);
+		},
+		encode: function(){
+			var self = this;
+
+			this.start();
+
+
+			this.inter = setInterval(function(){
+				self.recTime += 1
+				if(self.recTime >= 5){
+					clearInterval(self.inter);
+					console.log("stop");
+					self.stop();
+					console.log(self.recordRTC);
+					self.mp3();
+				}
+			},1000);
 		}
 	}
 });
