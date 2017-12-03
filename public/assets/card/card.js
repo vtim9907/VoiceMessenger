@@ -3,6 +3,7 @@ var card = Vue.extend({
     data: function() {
         return {
             name:'王小明',
+            photo: "https://goo.gl/eKdiuU",
             currentView: 'card-loading'
         };
     },
@@ -16,6 +17,7 @@ var card = Vue.extend({
             success: function(data) {
                 if (data.name && data.status == "success") {
                     self.name = data.name;
+                    self.photo = data.photo;
                 } else {
                     // TODO: set not-found view
                     self.name = '沒有卡片，幫QQ';
@@ -36,5 +38,5 @@ Vue.component('card-loading', {
 
 Vue.component('card-content', {
     template: '#card_content',
-    props: ["name"]
+    props: ["name", "photo"]
 })

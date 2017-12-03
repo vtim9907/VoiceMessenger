@@ -359,7 +359,8 @@ app.post('/card', checkAuthentication, function (req, res) {
     }).then(function (user) {
         res.json({
             status: "success",
-            name: user.nickname
+            name: user.nickname,
+            photo: user.photoPath
         })
     }).catch(function (reason) {
         res.json({
