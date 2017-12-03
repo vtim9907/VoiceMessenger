@@ -405,6 +405,7 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
         console.log("group2 length: ", group2.length);
 
         if (dailyCardSwitch) {
+            console.log("card1");
             for (let i = 0; i < group1.length; i++) {
                 console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
                 group1[i].update({
@@ -415,7 +416,8 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
                 })
             }
         } else {
-            for (let i = 0; i < group1.length / 2; i++) {
+            console.log("card2")
+            for (let i = 0; i < group1.length; i++) {
                 console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
                 group1[i].update({
                     card2: group2[i].id
@@ -438,5 +440,6 @@ schedule.scheduleJob("* * 12-23 * * *", function() {
 // ready to update cards
 schedule.scheduleJob("*/5 * * * *", function switchToNextDay() {
     console.log("Switch to next day !!");
+    console.log("dailyCardSwitch: ", dailyCardSwitch);
     dailyCardSwitch = !dailyCardSwitch;
 })
