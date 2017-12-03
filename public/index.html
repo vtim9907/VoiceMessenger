@@ -33,6 +33,10 @@
 
     <div  id='mainPage' :style='styleObject'>
 
+      <div v-if="Pageshown=='編輯資料'">
+        <edit></edit>
+      </div>
+
       <div v-if="Pageshown=='好友'">
         <friends></friends>
       </div>
@@ -71,6 +75,18 @@
     </div >   
     </script>
   
+    <script type="text/x-template" id="edit">
+        <div class="container">
+          <div class="text-center">
+            <h1>編輯個人檔案</h1>
+            <form action="/photo" method="post" enctype="multipart/form-data">
+              <p>更換大頭照</p><input type="file" name="myphoto"><br>
+              <input type="submit" value="submit">
+            </form>
+          </div>
+        </div>
+    </script>
+
     <script type='text/x-template' id="friends">
       <div class='row d-flex justify-content-center' style='padding:16px'>
         <div class="col-sm-4 card" style="width: 18rem;" v-for='i in lists'>
@@ -150,6 +166,7 @@
     <script type="text/javascript" src="card/card.js"></script> 
     <script type="text/javascript" src="chat/chat.js"></script> 
     <script type="text/javascript" src="friends/friends.js"></script> 
+    <script type="text/javascript" src="edit/edit.js"></script> 
     <script type='text/javascript' src='js/sidebar.js'></script>  
     <script type="text/javascript" src="js/register.js"></script>  
     <script src=" https://cdn.jsdelivr.net/npm/vue"></script>

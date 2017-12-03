@@ -141,7 +141,7 @@ function checkAuthentication(req, res, next) {
 	}
 }
 
-app.get("/givename", function(req, res, next) {
+app.get("/givename", checkAuthentication, function(req, res, next) {
 	models.User.findOne({
 		where: {
 			id: req.session.passport.user
@@ -243,20 +243,66 @@ app.get('/logout', function (req, res) {
     return res.redirect('/login');
 });
 
+// voice
 var wav = multer({ dest: 'wav/' });
 app.post('/wav', wav.single('wav'), function (req, res) {
-	console.log(req.headers);
-	console.log(req.file);
-	res.sendStatus(200);
+    console.log(req.headers);
+    console.log(req.file);
+    res.sendStatus(200);
 });
 
 var mp3 = multer({ dest: 'mp3/' });
 app.post('/mp3', mp3.single('mp3'), function (req, res) {
-	console.log(req.headers);
-	console.log(req.file);
-	res.sendStatus(200);
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        if (user.createOrModifyVoicePath(req.file.filename)) {
+            return res.redirect('/');
+        }
+        return res.send('an error occurred!');
+    }).catch(function (err) {
+        logger.error(err);
+        return done(err);
+    });
 });
 
+//photo
+var uploadPhoto = multer({ dest: 'photo/' });
+app.post('/photo', uploadPhoto.single('myphoto'), function (req, res) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        if (user.createOrModifyPhotoPath(req.file.filename)) {
+            return res.redirect('/');
+        }
+        return res.send('an error occurred!');
+    }).catch(function (err) {
+        logger.error(err);
+        return done(err);
+    });
+})
+
+app.get('/getPhoto', checkAuthentication, function (req, res, next) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        if (user.photoPath) {
+            return res.send(user.photoPath);
+        }
+        return res.send();
+    }).catch(function (err) {
+        logger.error(err);
+        return done(err);
+    });
+})
+
+//get card
 app.post('/card', checkAuthentication, function(req, res) {
     models.User.findOne({
         where: {
@@ -289,6 +335,7 @@ app.post('/card', checkAuthentication, function(req, res) {
     })
 })
 
+//missing routing handle
 app.use(function (req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
