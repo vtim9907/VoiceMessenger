@@ -313,23 +313,52 @@ app.get("/friendRequest", checkAuthentication, function (req, res, next) {
         }
     }).then(function (user) {
         if (!dailyCardSwitch) {
-            user.addFriend(user.card1).then(function () {
-                user.getFriend().then(function (friends) {
-                    friends.forEach(element => {
-                        console.log("okokokok" + element.id);
-                    });
-                });
-            });
+            user.addFriend(user.card1);
         } else {
-            user.addFriend(user.card2).then(function () {
-                user.getFriend().then(function (friends) {
-                    friends.forEach(element => {
-                        console.log("okokokok" + element.id);
-                    });
-                });
-            });
+            user.addFriend(user.card2);
         }
         return res.redirect('/');
+    }).catch(function (err) {
+        logger.error(err);
+        return done(err);
+    });
+});
+
+app.get('/getFriend', checkAuthentication, function (req, res, next) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        var friendArray = [];
+        user.getFriend().then(function (friends) {
+            let count = 0;
+            friends.forEach(function (friend) {
+                models.Friendship.findOne({
+                    where: {
+                        UserId: friend.id,
+                        FriendId: user.id
+                    }
+                }).then(function (mutualFriend) {
+                    if (mutualFriend) {
+                        friendArray.push({
+                            nickname: friend.nickname,
+                            photoPath: friend.photoPath
+                        });
+                    }
+                    count++;
+                    if (count === friends.length) {
+                        return res.send(friendArray);
+                    }
+                }).catch(function (err) {
+                    logger.error(err);
+                    return done(err);
+                });
+            });
+        }).catch(function (err) {
+            logger.error(err);
+            return done(err);
+        });
     }).catch(function (err) {
         logger.error(err);
         return done(err);
@@ -435,7 +464,7 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
 /*
 // small matching
 schedule.scheduleJob("* * 12-23 * * *", function() {
-
+ 
 })
 */
 
