@@ -4,8 +4,10 @@
      <title>index</title>
      <meta charset="utf-8">
      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">  
     <link href="css/main.css" rel="stylesheet">
+    <link href="chat/chat.css" rel="stylesheet">
     <link rel="manifest" href="./manifest.json">
     <script type="text/javascript" src="js/Vue.js"></script>
     <script type="text/javascript" src="js/lame.all.js"></script>
@@ -35,6 +37,10 @@
     </div>
 
     <div  id='mainPage' :style='styleObject'>
+
+      <div v-if="Pageshown=='編輯資料'">
+        <edit></edit>
+      </div>
 
       <div v-if="Pageshown=='好友'">
         <friends></friends>
@@ -74,6 +80,20 @@
     </div >   
     </script>
   
+    <script type="text/x-template" id="edit">
+        <div class="container">
+          <div class="text-center">
+            <h1>編輯個人檔案</h1>
+            <form action="/photo" method="post" enctype="multipart/form-data">
+              <p>更換大頭照</p>
+              <input type="file" accept="image/*" name="myphoto" >
+              <br><br>
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            </form> 
+          </div>
+        </div>
+    </script>
+
     <script type='text/x-template' id="friends">
       <div class='row d-flex justify-content-center' style='padding:16px'>
         <div class="col-sm-4 card" style="width: 18rem;" v-for='i in lists'>
@@ -86,49 +106,54 @@
     </script>
  
     <script type="text/x-template" id="card">
-      <center> 
+      <keep-alive>
+        <component :is="currentView" :name="name"></component>
+      </keep-alive>
+    </script>
+
+    <script type="text/x-template" id="card_loading">
+      <h3>TODO: A pretty loading spinner</h3>
+    </script>
+
+    <script type="text/x-template" id="card_content">
+      <center>
         <div class="card text-center" style="width:20rem;"> 
-        <img class="card-img-top" src=" https://goo.gl/eKdiuU" > 
-        <div class="card-body"> 
-          <h1 class="card-title">{{name}}</h1> 
-        </div> 
-        <div class="card-body"> 
-          <button type="button" class="btn btn-default btn-lg"> 
-          <span class="glyphicon glyphicon-play" aria-hidden="true"></span> 播放 
-          </button> 
-        </div> 
-        <br><br> 
-        <a href="#" class="btn btn-primary">送出邀請</a> 
+          <img class="card-img-top" src=" https://goo.gl/eKdiuU" > 
+          <div class="card-body"> 
+            <h1 class="card-title">{{name}}</h1> 
+          </div> 
+          <div class="card-body"> 
+            <button type="button" class="btn btn-info btn-lg"> 
+              <i class="fa fa-play" aria-hidden="true"></i> PLAY 
+            </button> 
+          </div> 
+          <br><br> 
+          <a href="/friendRequest" class="btn btn-primary">送出邀請</a> 
         </div> 
       </center>
     </script>
 
 
-    <script type="text/x-template" id="chat">]
-      <div>
+    <script type="text/x-template" id="chat">
+      <div class="row">
         <div class="userListContainer col-sm-3">
-          <div class="row">
-            <div class="panel-heading">
-              <span class="glyphicon glyphicon-user">　<span id="chatMemberText">聊天列表</span></span>
-            </div>
-            <div class="userlist-body">
-                <li class="user" ><a href="#">　<img src="https://goo.gl/eKdiuU" class="userthumbnail">　<span>小智</span></a></li>
-            </div>
+          <div class="panel-heading">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i> <span id="chatMemberText">聊天列表</span></span>
+          </div>
+          <div class="userlist-body">
+            <li class="user" ><a href="#">　<img src="https://goo.gl/eKdiuU" class="userthumbnail">　<span>小智</span></a></li>
           </div>
         </div>
         <div class="chatContainer col-sm-7">
-          <div class="row">
-            <div class="panel-heading">
-              <span class="glyphicon glyphicon-comment"></span>　<span id="chatroomNameText">聊天室</span><span class="name">Doge</span>
-            </div>
-            <section class="messageFlow">
-            </section>
-            <div class="inputContainer">
-              <form action="">
-                <input id="imgfromdisk" type="image" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png">
-                <input id="message" autocomplete="off" placeholder="Type your message..."><button id="send">Send</button>
-              </form>
-            </div>
+          <div class="panel-heading">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i> 　<span id="chatroomNameText">聊天室</span><span class="name">Doge</span>
+          </div>
+          <section class="messageFlow">
+          </section>
+          <div class="inputContainer">
+            <form action="">
+              <input id="message" autocomplete="off" placeholder="Type your message..."><button id="send">Send</button>
+            </form>
           </div>
         </div>
       </div>
@@ -136,13 +161,14 @@
 
       <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script type="text/javascript" src="js/record.js"></script>
     <script type="text/javascript" src="card/card.js"></script> 
     <script type="text/javascript" src="chat/chat.js"></script> 
     <script type="text/javascript" src="friends/friends.js"></script> 
+    <script type="text/javascript" src="edit/edit.js"></script> 
     <script type='text/javascript' src='js/sidebar.js'></script>  
     <script type="text/javascript" src="js/register.js"></script>  
     <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
