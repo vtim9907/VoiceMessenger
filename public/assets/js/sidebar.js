@@ -10,16 +10,14 @@ var sidebar=new Vue({
        width:'250px',
        paddind:'0'
      },
-<<<<<<< HEAD
+
      styleimg:{
        width:'10rem',
        display:'',
      },
-     List:["好友","聊天","抽卡","錄音"],
+     List:["編輯資料","好友","聊天","抽卡","錄音"],
      photo:'https://goo.gl/eKdiuU'
-=======
-     List:["編輯資料","好友","聊天","抽卡","錄音"]
->>>>>>> ef372f3c4d69efe0d3ac2356dbf7787003ecc938
+
 
    },
    methods:{
