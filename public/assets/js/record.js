@@ -1,3 +1,4 @@
+var blockRecord = 0;
 var record = Vue.extend({
 	template: '#record',
 	data: function(){
@@ -118,23 +119,22 @@ var record = Vue.extend({
 			xhr.send(f);
 		},
 		encode: function(){
-			var self = this;
-
-			this.start();
-			//this.stop();
-			//this.mp3();
-			
-			this.inter = setInterval(function(){
-				self.recTime += 1
-				if(self.recTime >= 5){
-					clearInterval(self.inter);
-					console.log("stop");
-					self.stop();
-					console.log(self.recordRTC.blob);
-					//self.mp3();
-				}
-			},1000);
-			
+			if (!blockRecord) {
+				blockRecord = 5;
+				var self = this;
+				self.recTime = 0;
+				this.start();
+				this.inter = setInterval(function(){
+					self.recTime += 1
+					blockRecord -= 1;
+					if(self.recTime >= 5){
+						clearInterval(self.inter);
+						console.log("stop");
+						self.stop();
+						console.log(self.recordRTC.blob);
+					}
+				},1000);	
+			}
 		}
 	}
 });
