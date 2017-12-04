@@ -324,7 +324,7 @@ app.get("/friendRequest", checkAuthentication, function (req, res, next) {
     });
 });
 
-app.get('/getFriend', checkAuthentication, function (req, res, next) {
+app.post('/getFriend', checkAuthentication, function (req, res, next) {
     models.User.findOne({
         where: {
             id: req.session.passport.user
