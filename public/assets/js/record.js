@@ -77,7 +77,14 @@ var record = Vue.extend({
 		  			encode_worker.onmessage = function(e){
 		  				console.log('worker return ' + e.data);
 		  				var mp3 = document.getElementById('mp3Stereo');
-		  				mp3.src = window.URL.createObjectURL(e.data);
+						  mp3.src = window.URL.createObjectURL(e.data);
+						  
+						  var f = new FormData();
+						  f.append('mp3',e.data,'test.mp3');
+						  var xhr = new XMLHttpRequest();
+						  xhr.open('POST','/mp3',true);
+						  xhr.send(f);
+						  console.log('mp3 send');
 		  			}
 		  		}
 		  		
