@@ -28,6 +28,14 @@ var logger = require('./lib/logger');
 var auth = require('./lib/auth');
 // var response = require('./lib/response');
 
+// internal variable
+// card:
+const CARD_SUCCESS = 0;
+const CARD_NOT_FOUND = 1;
+const CARD_IMCOMPLETED_DATA = 2;
+//const CARD_PERMISSION_DENIED = 101;
+//const CARD_INTERNEL_ERROR = 500;
+
 var dailyCardSwitch = true;
 
 //server setup
@@ -342,7 +350,18 @@ app.post('/card', checkAuthentication, function (req, res) {
         where: {
             id: req.session.passport.user
         }
-    }).then(function (user) {
+    }).then(function checkUserValid(user) {
+        // if (!user) {
+        //     return Promise.reject(CARD_PERMISSION_DENIED);
+        // }
+        console.log("Check user status:");
+        console.log("User photo path: ", user.photoPath);
+        console.log("User voice path: ", user.voicePath);
+        if (!user.photoPath /* || !user.voicePath */) {
+            return Promise.reject(CARD_IMCOMPLETED_DATA);
+        }
+        return user;
+    }).then(function findMatching(user) {
         if (!dailyCardSwitch) {
             return models.User.findOne({
                 where: {
@@ -356,17 +375,31 @@ app.post('/card', checkAuthentication, function (req, res) {
                 }
             })
         }
-    }).then(function (user) {
+    }).then(function checkCardValid(user) {
+        // No user
+        if (user == null) {
+            return Promise.reject(CARD_NOT_FOUND);
+        }
+        return user;
+    }).then(function sendRequest(user) {
         res.json({
-            status: "success",
+            status: CARD_SUCCESS,
             name: user.nickname,
-            photo: user.photoPath
-        })
-    }).catch(function (reason) {
-        res.json({
-            status: "fail",
-            name: ""
-        })
+            photo: user.photoPath,
+            voice: user.voicePath
+        });
+    }).catch(function (status) {
+        switch(status) {
+            //case CARD_PERMISSION_DENIED:
+            case CARD_IMCOMPLETED_DATA:
+            case CARD_NOT_FOUND:
+                res.json({
+                    status: status
+                });
+                break;
+            default:
+                res.sendStatus(403);
+        }
     })
 })
 
@@ -398,8 +431,25 @@ models.sequelize.sync({ force: true }).then(function () {
 
 // big matching: prebuild cards of next day;
 schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
-    models.User.findAll().then(function (users) {
+    let card = dailyCardSwitch ? "card1" : "card2";
+
+    let col = {};
+    col[card] = null;
+
+    models.User.findAll({
+        where: {
+            photoPath: {
+                [models.Sequelize.Op.ne]: null
+            }
+            // ,
+            // voicePath: {
+            //     [models.Sequelize.Op.ne]: null
+            // }
+        }
+    }).then(function(users) {
+
         shuffle(users);
+
         var group1 = users.slice(0, users.length / 2);
         var group2 = users.slice(users.length / 2);
 
@@ -407,30 +457,17 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
         console.log("group1 length: ", group1.length);
         console.log("group2 length: ", group2.length);
 
-        if (dailyCardSwitch) {
-            console.log("card1");
-            for (let i = 0; i < group1.length; i++) {
-                console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
-                group1[i].update({
-                    card1: group2[i].id
-                });
-                group2[i].update({
-                    card1: group1[i].id
-                })
-            }
-        } else {
-            console.log("card2")
-            for (let i = 0; i < group1.length; i++) {
-                console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
-                group1[i].update({
-                    card2: group2[i].id
-                });
-                group2[i].update({
-                    card2: group1[i].id
-                })
-            }
+        for (let i = 0; i < group1.length; i++) {
+            console.log("\n", group1[i].email, "<--->", group2[i].email, "\n");
+            col[card] = group2[i].id;
+            group1[i].update(Object.assign({}, col));
+            col[card] = group1[i].id;
+            group2[i].update(Object.assign({}, col));
         }
-    })
+    }).catch(function(reason) {
+        console.log(reason);
+    });
+
 })
 
 /*
