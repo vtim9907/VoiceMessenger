@@ -8,6 +8,7 @@ var card = Vue.extend({
         return {
             name:'王小明',
             photo: "https://goo.gl/eKdiuU",
+            voice: "#",
             currentView: 'card-loading'
         };
     },
@@ -23,6 +24,7 @@ var card = Vue.extend({
                     case CARD_SUCCESS:
                         self.name = data.name;
                         self.photo = data.photo;
+                        self.voice = data.voice;
                         break;
                     case CARD_NOT_FOUND:
                         // TODO: not found page
@@ -53,5 +55,26 @@ Vue.component('card-loading', {
 
 Vue.component('card-content', {
     template: '#card_content',
-    props: ["name", "photo"]
+    props: ["name", "photo", "voice"],
+    data: function() {
+        return {
+            playerMsg: "Play"
+        }
+    },
+    methods: {
+        playOrStop: function() {
+            let voice = document.getElementById("voice");
+            if (this.playerMsg == "Play") {
+                this.playerMsg = "Stop";
+                voice.play();
+            } else {
+                this.playerMsg = "Play";
+                voice.pause();
+                voice.currentTime = 0;
+            }
+        },
+        handleEnded: function() {
+            this.playerMsg = "Play";
+        }
+    }
 })

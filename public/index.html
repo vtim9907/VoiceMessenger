@@ -104,7 +104,7 @@
 
   <script type="text/x-template" id="card">
       <keep-alive>
-        <component :is="currentView" :name="name" :photo="photo"></component>
+        <component :is="currentView" :name="name" :photo="photo" :voice="voice"></component>
       </keep-alive>
     </script>
 
@@ -120,8 +120,12 @@
             <h1 class="card-title">{{name}}</h1> 
           </div> 
           <div class="card-body"> 
-            <button type="button" class="btn btn-info btn-lg"> 
-              <i class="fa fa-play" aria-hidden="true"></i> PLAY 
+            <audio id="voice" @ended="handleEnded()">
+              <source :src="voice" type="audio/mpeg">
+            </audio>
+            <button type="button" class="btn btn-info btn-lg" @click="playOrStop()"> 
+
+              <i class="fa fa-play" aria-hidden="true"></i> {{playerMsg}}
             </button> 
           </div> 
           <br><br> 
