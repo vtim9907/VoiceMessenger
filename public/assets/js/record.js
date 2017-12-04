@@ -125,7 +125,7 @@ var record = Vue.extend({
 				self.recTime = 0;
 				this.start();
 				this.inter = setInterval(function(){
-					self.recTime += 1
+					self.recTime += 1;
 					blockRecord -= 1;
 					if(self.recTime >= 5){
 						clearInterval(self.inter);

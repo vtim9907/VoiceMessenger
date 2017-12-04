@@ -264,14 +264,18 @@ app.post('/wav', wav.single('wav'), function (req, res) {
 
 var mp3 = multer({ dest: 'mp3/' });
 app.post('/mp3', mp3.single('mp3'), function (req, res) {
+    console.log("------------------------")
+    console.log("------------------------")
     models.User.findOne({
         where: {
             id: req.session.passport.user
         }
     }).then(function (user) {
         if (user.createOrModifyVoicePath(req.file.filename)) {
+            console.log("++++++++++++++++++++++++")
             return res.redirect('/');
         }
+        console.log("????????????????????????")
         return res.send('an error occurred!');
     }).catch(function (err) {
         logger.error(err);
