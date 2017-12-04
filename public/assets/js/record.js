@@ -92,7 +92,8 @@ var record = Vue.extend({
 		  		a.stream.getTracks()[0].stop();
 
 		  		player = document.getElementById('player');
-		  		player.src = window.URL.createObjectURL(recordRTC.blob);
+				  player.src = window.URL.createObjectURL(recordRTC.blob);
+				  a.mp3();//new solution
 		  	});
 		  	this.recorder.disconnect();
 		},
@@ -114,18 +115,20 @@ var record = Vue.extend({
 			var self = this;
 
 			this.start();
-
-
+			//this.stop();
+			//this.mp3();
+			
 			this.inter = setInterval(function(){
 				self.recTime += 1
 				if(self.recTime >= 5){
 					clearInterval(self.inter);
 					console.log("stop");
 					self.stop();
-					console.log(self.recordRTC);
-					self.mp3();
+					console.log(self.recordRTC.blob);
+					//self.mp3();
 				}
 			},1000);
+			
 		}
 	}
 });
