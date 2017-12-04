@@ -1,21 +1,28 @@
-	Vue.component('record',{
-		template: '#record',
-		data: function(){
-			return {
-				audioList: ['player','mp3Stereo'],
-				buttonList: ['start','stop','play','send','mp3','sendMp3']
-			};
+var record = Vue.extend({
+	template: '#record',
+	data: function(){
+		return {
+			audioList: ['player','mp3Stereo'],
+			recordRTC: {},
+			stream: {},
+			recorder: {},
+			recTime: 0,
+			inter: undefined
+		};
+	},
+	methods: {
+		start: function(){
+			navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(this.handleSuccess);
 		},
-		methods: {
-		  handleSuccess: function(stream) {
-		  	var recordRTC = RecordRTC(stream, {
+		handleSuccess: function(stream){
+			var recordRTC = RecordRTC(stream, {
 		  		type: 'audio',
 		  		recorderType: RecordRTC.StereoAudioRecorder,
 		  		disableLogs: true
 		  	});
 		  	recordRTC.startRecording();
-		  	window.recordRTC = recordRTC;
-		  	window.stream = stream;
+		  	this.recordRTC = recordRTC;
+		  	this.stream = stream;
 
 
 		  	var context = new AudioContext();
@@ -29,127 +36,11 @@
             audioInput.connect(recorder);
 
             recorder.connect(context.destination);
-            window.recorder = recorder;
-		  },
-		  onAudio: function(e){
-		  	var left = e.inputBuffer.getChannelData(0);
+            this.recorder = recorder;
+		},
+		onAudio: function(e){
+			var left = e.inputBuffer.getChannelData(0);
         	this.drawBuffer(left);
-		  },
-		  start: function(){
-		  	navigator.mediaDevices.getUserMedia({audio:true, video:false}).then(this.handleSuccess);
-		  },
-		  stop: function(){
-		  	var recordRTC = window.recordRTC;
-		  	recordRTC.stopRecording(function(){
-		  		window.stream.getTracks()[0].stop();
-
-		  		player = document.getElementById('player');
-		  		player.src = window.URL.createObjectURL(recordRTC.blob);
-		  	});
-		  	window.recorder.disconnect();
-		  },
-		  download: function() {
-			
-		  },
-		  send: function(){
-		  	var f = new FormData();
-		  	f.append('wav', window.recordRTC.blob, 'test.wav');
-		  	var xhr = new XMLHttpRequest();
-		  	xhr.open('POST','/wav',true);
-		  	xhr.send(f);
-		  },
-		  sendMp3: function(){
-		  	var f = new FormData();
-		  	f.append('mp3',window.mp3Blob,'test.mp3');
-		  	var xhr = new XMLHttpRequest();
-		  	xhr.open('POST','/mp3',true);
-		  	xhr.send(f);
-		  },
-		  mp3: function(){
-		  	var fileReader = new FileReader();
-		  	var a = this;
-		  	fileReader.onload = function(){
-		  		var wav = lamejs.WavHeader.readHeader(new DataView(fileReader.result));
-		  		console.log(wav);
-		  		console.log(fileReader.result);
-		  		var samples = new Int16Array(fileReader.result,wav.dataOffset, wav.dataLen/2);
-		  		var left = new Int16Array(samples.length/2);
-		  		for(var i=0;i<left.length;i++){//聲道分離
-		  			left[i] = samples[2*i];
-		  		}
-		  		//encodeMono(1, wav.sampleRate, left);
-		  		a.encodeStereo(2, wav.sampleRate, samples);
-		  		/*
-		  		var streamArray = new Int16Array(fileReader.result);
-		  		var buffer = [];
-		  		var mp3Encoder = new lamejs.Mp3Encoder(1, 44100, 128);
-
-		  		var mp3Data = mp3Encoder.encodeBuffer(streamArray);
-		  		buffer.push(mp3Data);
-		  		mp3Data = mp3Encoder.flush();
-		  		buffer.push(mp3Data);
-		  		var blob = new Blob(buffer, {type:'audio/mp3'});
-
-		  		var mp3p = document.getElementById('mp3');
-		  		mp3p.src = window.URL.createObjectURL(blob);
-		  		*/
-		  	}
-		  	fileReader.readAsArrayBuffer(window.recordRTC.blob);
-		  },
-		  encodeMono: function(channels, sampleRate, samples) {
-	        var buffer = [];
-	        var mp3enc = new lamejs.Mp3Encoder(channels, sampleRate, 128);
-	        var remaining = samples.length;
-	        var maxSamples = 1152;
-	        for (var i = 0; remaining >= maxSamples; i += maxSamples) {
-	            var mono = samples.subarray(i, i + maxSamples);
-	            var mp3buf = mp3enc.encodeBuffer(mono);
-	            if (mp3buf.length > 0) {
-	                buffer.push(new Int8Array(mp3buf));
-	            }
-	            remaining -= maxSamples;
-	        }
-	        var d = mp3enc.flush();
-	        if(d.length > 0){
-	            buffer.push(new Int8Array(d));
-	        }
-	        console.log('done encoding, size=', buffer.length);
-	        var blob = new Blob(buffer, {type: 'audio/mp3'});
-	        var bUrl = window.URL.createObjectURL(blob);
-	        console.log('Blob created, URL:', bUrl);
-	        
-	        var mp3 = document.getElementById('mp3');
-	        mp3.src = bUrl;
-	    },
-	    encodeStereo: function(channels, sampleRate, samples){
-	    	var mp3encoder = new lamejs.Mp3Encoder(channels,sampleRate,128);
-	    	var mp3Data = [];
-	    	var left = new Int16Array(samples.length/2);
-	    	var right = new Int16Array(samples.length/2);
-	    	for(var i=0;i<samples.length/2;i++){
-	    		left[i] = samples[2*i];
-	    		right[i] = samples[2*i+1];
-	    	}
-	    	var sampleBlockSize = 1152;
-	    	for(var i=0;i<samples.length/2;i+=sampleBlockSize){
-	    		var leftChunk = left.subarray(i, i + sampleBlockSize);
-				var rightChunk = right.subarray(i, i + sampleBlockSize);
-				var mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
-				if (mp3buf.length > 0) {
-				  mp3Data.push(mp3buf);
-				}
-	    	}
-	    	var mp3Buf = mp3encoder.flush();
-
-	    	if(mp3buf.length > 0){
-	    		mp3Data.push(mp3Buf);
-	    	}
-
-	    	var blob = new Blob(mp3Data, {type:'audio/mp3'});
-	    	window.mp3Blob = blob;
-
-	    	var mp3Stereo = document.getElementById('mp3Stereo');
-	    	mp3Stereo.src = window.URL.createObjectURL(blob);
 		},
 		drawBuffer: function(data) {
 			console.log(data);
@@ -173,13 +64,79 @@
 	            }
 	            context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
 	        }
-	    }
-	  	}
-	});
+	    },
+	    mp3: function(){
+	    	var fileReader = new FileReader();
+		  	var a = this;
+		  	fileReader.onload = function(){
+		  		if(window.Worker){
+		  			console.log('worker');
+		  			var encode_worker = new Worker('./js/encode_worker.js');
+		  			encode_worker.postMessage(fileReader.result);
+		  			encode_worker.onmessage = function(e){
+		  				console.log('worker return ' + e.data);
+		  				var mp3 = document.getElementById('mp3Stereo');
+						  mp3.src = window.URL.createObjectURL(e.data);
+						  
+						  var f = new FormData();
+						  f.append('mp3',e.data,'test.mp3');
+						  var xhr = new XMLHttpRequest();
+						  xhr.open('POST','/mp3',true);
+						  xhr.send(f);
+						  console.log('mp3 send');
+		  			}
+		  		}
+		  		
+			  }
+			console.log(this.recordRTC);
+		  	fileReader.readAsArrayBuffer(this.recordRTC.blob);
+	    },
+	    stop: function(){
+		  	var recordRTC = this.recordRTC;
+		  	var a = this;
+		  	recordRTC.stopRecording(function(){
+		  		a.stream.getTracks()[0].stop();
 
+		  		player = document.getElementById('player');
+				  player.src = window.URL.createObjectURL(recordRTC.blob);
+				  a.mp3();//new solution
+		  	});
+		  	this.recorder.disconnect();
+		},
+		send: function(){
+			var f = new FormData();
+			f.append('wav', window.recordRTC.blob, 'test.wav');
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST','/wav',true);
+			xhr.send(f);
+		},
+		sendMp3: function(){
+			var f = new FormData();
+			f.append('mp3',window.mp3Blob,'test.mp3');
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST','/mp3',true);
+			xhr.send(f);
+		},
+		encode: function(){
+			var self = this;
 
+			this.start();
+			//this.stop();
+			//this.mp3();
+			
+			this.inter = setInterval(function(){
+				self.recTime += 1
+				if(self.recTime >= 5){
+					clearInterval(self.inter);
+					console.log("stop");
+					self.stop();
+					console.log(self.recordRTC.blob);
+					//self.mp3();
+				}
+			},1000);
+			
+		}
+	}
+});
 
-
-	var app = new Vue({
-		el: '#app',
-	});
+Vue.component('record', record);

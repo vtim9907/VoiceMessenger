@@ -1,87 +1,83 @@
 <!doctype html>
-  <html lang="en" style='margin:0'>
-   <head>
-     <title>index</title>
-     <meta charset="utf-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">  
-    <link href="css/main.css" rel="stylesheet">
-    <link href="chat/chat.css" rel="stylesheet">
-    <link rel="manifest" href="./manifest.json">
-    <script type="text/javascript" src="js/Vue.js"></script>
-    <script type="text/javascript" src="js/lame.all.js"></script>
-    <script type="text/javascript" src="js/RecordRTC.js"></script>
-    <script type="text/javascript" src="./service_worker.js"></script>
-  </head>
-  <body onresize='responsive()' class='bd-drak'>
-    <div class='wrapper' >
-      <nav class="navbar navbar-expand-md flex-column navbar-dark bg-primary"  :style='styleObject' id='sidebar' >
-        <div class="container-fluid">  
-          <a class="navbar-brand" href="#">
-            <img src="img/logo-voiceMessage.png" alt="" class="d-inline-block align-top">
-          </a>
-          <button class="navbar-toggler justify-content-end" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-        <img :src='photo':style='styleimg' >
-        <div class="collapse navbar-collapse " id="navbarNav">
-          <ul class="navbar-nav flex-column ">
-          <li class="nav-item" v-for='i in List' >
+<html lang="en" style='margin:0'>
+
+<head>
+  <title>index</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+    crossorigin="anonymous">
+  <link href="css/main.css" rel="stylesheet">
+  <link href="chat/chat.css" rel="stylesheet">
+  <link rel="manifest" href="./manifest.json">
+  <script type="text/javascript" src="js/Vue.js"></script>
+  <script type="text/javascript" src="js/lame.all.js"></script>
+  <script type="text/javascript" src="js/RecordRTC.js"></script>
+  <script type="text/javascript" src="./service_worker.js"></script>
+</head>
+
+<body onresize='responsive()' class='bd-drak'>
+  <div class='wrapper'>
+    <nav class="navbar navbar-expand-md flex-column navbar-dark bg-primary" :style='styleObject' id='sidebar'>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="img/logo-voiceMessage.png" alt="" class="d-inline-block align-top">
+        </a>
+        <button class="navbar-toggler justify-content-end" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <img :src='photo' :style='styleimg'>
+      <div class="collapse navbar-collapse " id="navbarNav">
+        <ul class="navbar-nav flex-column ">
+          <li class="nav-item" v-for='i in List'>
             <a class="nav-link" href="#" @click="show(i)"> {{i}} </a>
           </li>
           <a class="nav-link" href="/logout">登出</a>
-          </ul>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div id='mainPage' :style='styleObject'>
+
+    <div v-if="Pageshown=='編輯資料'">
+      <edit></edit>
+    </div>
+
+    <div v-if="Pageshown=='好友'">
+      <friends></friends>
+    </div>
+
+    <div v-if="Pageshown=='聊天'">
+      <chat></chat>
+    </div>
+
+    <div v-if="Pageshown=='抽卡'">
+      <card></card>
+    </div>
+
+
+    <div v-if="Pageshown=='錄音'">
+      <record></record>
+    </div>
+
+  </div>
+
+  <script type="text/x-template" id="record">
+      <div class="row justify-content-center">
+        <canvas class="w-75 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
+        <audio class="col-12" :id="i" controls v-for="i in audioList"></audio>
+        <div class="col-12">{{recTime}}</div>
+        <div class="btn-group">
+          <button type="button" class="btn" @click="encode()" value="start">start</button>
         </div>
-      </nav>
-    </div>
-
-    <div  id='mainPage' :style='styleObject'>
-
-      <div v-if="Pageshown=='編輯資料'">
-        <edit></edit>
-      </div>
-
-      <div v-if="Pageshown=='好友'">
-        <friends></friends>
-      </div>
-    
-      <div v-if="Pageshown=='聊天'">
-        <chat></chat>
-      </div>
-     
-      <div v-if="Pageshown=='抽卡'">
-        <card></card>
-      </div>
-      
-      
-      <div v-if="Pageshown=='錄音'">
-        <div class='col-12'  id="app" >
-          <record></record>
-        </div>
-      </div>
-
-    </div>
-
-    <script type="text/x-template" id="record">
-    <div>
-    <canvas class="w-50 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
-    <audio class="col-8" :id="i" controls v-for="i in audioList"></audio>
-    <div class="btn-group">
-    <button type="button" class="btn" @click="start()" value="start">start</button>
-    <button type="button" class="btn" @click="stop()" value="stop">stop</button>
-    <!--
-    <button type="button" class="btn" @click="download()" value="play">download</button>
-    -->
-    <button type="button" class="btn" @click="send()" value="send">send wav</button>
-    <button type="button" class="btn" @click="mp3()" value="mp3">mp3</button>
-    <button type="button" class="btn" @click="sendMp3()" value="sendMp3">sendMp3</button> 
-    </div>
-    </div >   
+      </div>   
     </script>
-  
-    <script type="text/x-template" id="edit">
+
+  <script type="text/x-template" id="edit">
         <div class="container">
           <div class="text-center">
             <h1>編輯個人檔案</h1>
@@ -95,7 +91,7 @@
         </div>
     </script>
 
-    <script type='text/x-template' id="friends">
+  <script type='text/x-template' id="friends">
       <div class='row d-flex justify-content-center' style='padding:16px'>
         <div class="col-sm-4 card" style="width: 18rem;" v-for='i in lists'>
           <img class="card-img-top" :src="i.imgurl" alt="Card image cap">
@@ -105,18 +101,18 @@
         </div>
       </div>
     </script>
- 
-    <script type="text/x-template" id="card">
+
+  <script type="text/x-template" id="card">
       <keep-alive>
         <component :is="currentView" :name="name"></component>
       </keep-alive>
     </script>
 
-    <script type="text/x-template" id="card_loading">
+  <script type="text/x-template" id="card_loading">
       <h3>TODO: A pretty loading spinner</h3>
     </script>
 
-    <script type="text/x-template" id="card_content">
+  <script type="text/x-template" id="card_content">
       <center>
         <div class="card text-center" style="width:20rem;"> 
           <img class="card-img-top" src=" https://goo.gl/eKdiuU" > 
@@ -135,7 +131,7 @@
     </script>
 
 
-    <script type="text/x-template" id="chat">
+  <script type="text/x-template" id="chat">
       <div class="row">
         <div class="userListContainer col-sm-3">
           <div class="panel-heading">
@@ -160,18 +156,22 @@
       </div>
     </script>
 
-      <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/record.js"></script>
-    <script type="text/javascript" src="card/card.js"></script> 
-    <script type="text/javascript" src="chat/chat.js"></script> 
-    <script type="text/javascript" src="friends/friends.js"></script> 
-    <script type="text/javascript" src="edit/edit.js"></script> 
-    <script type='text/javascript' src='js/sidebar.js'></script>  
-    <script type="text/javascript" src="js/register.js"></script>  
-    <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
-  </body>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="js/record.js"></script>
+  <script type="text/javascript" src="card/card.js"></script>
+  <script type="text/javascript" src="chat/chat.js"></script>
+  <script type="text/javascript" src="friends/friends.js"></script>
+  <script type="text/javascript" src="edit/edit.js"></script>
+  <script type='text/javascript' src='js/sidebar.js'></script>
+  <script type="text/javascript" src="js/register.js"></script>
+  <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
+</body>
+
 </html>
