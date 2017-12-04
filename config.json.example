@@ -14,7 +14,6 @@
     "debug": true,
     "email": true,
     "allowemailregister": true,
-    "debug": true,
     "usessl": false,
     "sslkeypath": "./ssl/private.key",
     "sslcertpath": "./ssl/certificate.crt",

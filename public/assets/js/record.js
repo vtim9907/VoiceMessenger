@@ -1,5 +1,4 @@
-
-var record = Vue.extend({
+Vue.component('record',{
 	template: '#record',
 	data: function(){
 		return {
