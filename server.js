@@ -21,7 +21,6 @@ var validator = require('validator');
 var schedule = require('node-schedule');
 var shuffle = require('shuffle-array');
 var io = require('socket.io');
-const readline = require('readline');
 
 //core
 var models = require('./lib/models');
@@ -651,25 +650,3 @@ schedule.scheduleJob("*/5 * * * *", function switchToNextDay() {
     console.log("dailyCardSwitch: ", dailyCardSwitch);
     dailyCardSwitch = !dailyCardSwitch;
 })
-
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: '$ '
-});
-
-rl.on('line', (input) => {
-    try {
-        eval(input);
-    } catch (e) {
-        console.log("\nDid not evaluate successfully.");
-        console.log("The string to evaluate: " + input + "\n");
-    }
-    rl.prompt();
-});
-
-rl.on('SIGINT', function() {
-    console.log('');
-    process.exit();
-});
