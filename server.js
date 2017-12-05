@@ -86,16 +86,17 @@ app.use('/mp3', express.static(path.join(__dirname, 'mp3')));
 app.use('/photo', express.static(path.join(__dirname, 'photo')));
 
 //session
-app.use(session({
-    secret: config.sessionsecret,
-    store: sessionStore,
-    resave: false, //don't save session if unmodified
-    saveUninitialized: true, //always create session to ensure the origin
-    rolling: true, // reset maxAge on every response
-    cookie: {
-        maxAge: config.sessionlife
-    }
-}));
+var sessionMiddleware = session({
+	secret: config.sessionsecret,
+	store: sessionStore,
+	resave: false, //don't save session if unmodified
+	saveUninitialized: true, //always create session to ensure the origin
+	rolling: true, // reset maxAge on every response
+	cookie: {
+		maxAge: config.sessionlife
+	}
+});
+app.use(sessionMiddleware);
 
 app.use(flash());
 
