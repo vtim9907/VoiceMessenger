@@ -1,5 +1,4 @@
 const cacheFile = [
-  '/notConnect.html'
 ]
 
 const cacheKey = 'demo-app-v1'
