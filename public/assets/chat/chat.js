@@ -55,6 +55,8 @@ var chat = Vue.extend({
         }
         $.post('getFriend',function(data){
             if (data === "no") {
+                self.not_found = true;
+            } else {
                 self.not_found = false;
                 var nickname = [];
                 var photoPath = [];
@@ -67,8 +69,6 @@ var chat = Vue.extend({
                 if(self.user){
                     self.socket.emit('getChatContent',{toUser: self.user});
                 }
-            } else {
-                self.not_found = true;
             }
         });
         //this.user = this.userList[0];
