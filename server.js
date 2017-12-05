@@ -96,17 +96,6 @@ app.use(session({
 
 app.use(flash());
 
-// //express Vue
-// var vueOptions = {
-//     rootPath: path.join(__dirname,  'public', 'views'),
-//     layout: {
-//         start: '<div id="app">',
-//         end: '</div>'
-//     }
-// };
-// var expressVueMiddleware = expressVue.init(vueOptions);
-// app.use(expressVueMiddleware);
-
 //passport 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -254,27 +243,16 @@ app.get('/logout', function (req, res) {
 });
 
 // voice
-var wav = multer({ dest: 'wav/' });
-app.post('/wav', wav.single('wav'), function (req, res) {
-    console.log(req.headers);
-    console.log(req.file);
-    res.sendStatus(200);
-});
-
 var mp3 = multer({ dest: 'mp3/' });
 app.post('/mp3', mp3.single('mp3'), function (req, res) {
-    console.log("------------------------")
-    console.log("------------------------")
     models.User.findOne({
         where: {
             id: req.session.passport.user
         }
     }).then(function (user) {
         if (user.createOrModifyVoicePath(req.file.filename)) {
-            console.log("++++++++++++++++++++++++")
             return res.redirect('/');
         }
-        console.log("????????????????????????")
         return res.send('an error occurred!');
     }).catch(function (err) {
         logger.error(err);
