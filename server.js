@@ -343,30 +343,48 @@ app.post('/getFriend', checkAuthentication, function (req, res, next) {
         }
     }).then(function (user) {
         var friendArray = [];
+        console.log('-------------------in----------------------')
         user.getFriend().then(function (friends) {
             let count = 0;
-            friends.forEach(function (friend) {
-                models.Friendship.findOne({
-                    where: {
-                        UserId: friend.id,
-                        FriendId: user.id
-                    }
-                }).then(function (mutualFriend) {
-                    if (mutualFriend) {
-                        friendArray.push({
-                            nickname: friend.nickname,
-                            photoPath: friend.photoPath
-                        });
-                    }
-                    count++;
-                    if (count === friends.length) {
-                        return res.send(friendArray);
-                    }
-                }).catch(function (err) {
-                    logger.error(err);
-                    return done(err);
+            console.log('-------------------friends----------------------')
+            console.log(friends)
+            console.log('-------------------friends----------------------')
+            if (friends.length) {
+                console.log('-------------------length>0----------------------')
+                friends.forEach(function (friend) {
+                    models.Friendship.findOne({
+                        where: {
+                            UserId: friend.id,
+                            FriendId: user.id
+                        }
+                    }).then(function (mutualFriend) {
+                        console.log('-------------------checkfriend----------------------')
+                        if (mutualFriend) {
+                            console.log('-------------------yes friend----------------------')
+                            friendArray.push({
+                                nickname: friend.nickname,
+                                photoPath: friend.photoPath
+                            });
+                        }
+                        count++;
+                        if (count === friends.length) {
+                            console.log('-------------------send friends----------------------')
+                            if (friendArray.length === 0) {
+                                return res.send("no");
+                            } else {
+                                return res.send(friendArray);
+                            }
+                        }
+                    }).catch(function (err) {
+                        logger.error(err);
+                        return done(err);
+                    });
                 });
-            });
+            } else {
+                console.log('-------------------no friends length < 0----------------------')
+                return res.send("no");
+            }
+            console.log('-------------------done----------------------')
         }).catch(function (err) {
             logger.error(err);
             return done(err);
