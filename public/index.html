@@ -93,20 +93,24 @@
     </script>
 
   <script type='text/x-template' id="friends">
-      <div class='row d-flex justify-content-center' style='padding:16px'>
-        <div v-if="not_found">
+    <div class='d-flex justify-content-center text-center' style='padding:16px'>
+      <div class="text-center" v-if="not_found">
+        <div class="container">
           <h1>還沒有朋友...</h1>
         </div>
-        <div v-else>
-          <div class="col-sm-4 card" style="width: 18rem;" v-for='i in lists'>
+      </div>
+      <div v-else>
+        <div class="container row">
+          <div class="col-sm-4" style="width: 450px; hight: 450px;" v-for='i in lists'>
             <img class="card-img-top" :src="i.photoPath" alt="Card image cap">
-            <div class="card-block justify-content-center">
+            <div class="card-block justify-content-center text-center">
               <h3 class="card-title"> {{i.nickname}}</h3>
-             </div>
+            </div>
           </div>
         </div>
       </div>
-    </script>
+    </div>
+  </script>
 
   <script type="text/x-template" id="card">
     <div id="card_container">

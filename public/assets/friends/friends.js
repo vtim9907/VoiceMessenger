@@ -20,9 +20,7 @@ var friends = Vue.extend({
       success: function (data) {
         if (data === "no") {
           self.not_found = true;
-          alert("HI");
         } else {
-          alert("OK");
           self.not_found = false;
           self.lists = data;
         }
