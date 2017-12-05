@@ -1,7 +1,24 @@
 .navbar-light {
     background-color: rgb(57, 63, 85);
+    padding:0 0 0 10px;
 }
-
-.paddingTop {
-    padding-top: 30px;
+body{
+ height:fit-content; 
+}
+html {
+  height:fit-content;
+}
+#btns{
+  margin-right:10px;
+}
+h1{
+text-align:center;
+margin:2rem;
+padding-top:10px;
+}
+label{
+font-size:20px;
+}
+#form-container{
+ margin:auto;
 }
