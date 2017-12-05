@@ -68,14 +68,31 @@
   </div>
 
   <script type="text/x-template" id="record">
-      <div class="row justify-content-center">
-        <canvas class="w-75 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
-        <audio class="col-12" :id="i" controls v-for="i in audioList"></audio>
-        <div class="col-12">{{recTime}}</div>
-        <div class="btn-group">
-          <button type="button" class="btn" @click="encode()" value="start">start</button>
+    <div class="row justify-content-center">
+      <div class="">
+        <div class="col-12 text-center">click picture to start recording</div>
+        <img class="w-100" src="/img/microphone.png" @click="clicked()">
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{message}}</h5>
+            </div>
+            <div class="modal-body">
+              <canvas class="w-100 h-75 border rounded border-primary" id="canvas"></canvas>
+              <audio class="col-8 d-none" :id="i" controls v-for="i in audioList"></audio> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" v-if="showButton">Close</button>
+              <button type="button" class="btn btn-primary" @click="encode()" v-if="showButton">record</button>
+              <button type="button" class="btn btn-primary" @click="play()" v-if="showButton">play</button>
+            </div>
+          </div>
         </div>
-      </div>   
+      </div>
+    </div >   
     </script>
 
   <script type="text/x-template" id="edit">
