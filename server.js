@@ -403,7 +403,7 @@ app.post('/card', checkAuthentication, function (req, res) {
         console.log("Check user status:");
         console.log("User photo path: ", user.photoPath);
         console.log("User voice path: ", user.voicePath);
-        if (!user.photoPath || !user.voicePath) {
+        if (/* !user.photoPath || */!user.voicePath) {
             return Promise.reject(CARD_IMCOMPLETED_DATA);
         }
         return user;
@@ -607,9 +607,9 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
 
     models.User.findAll({
         where: {
-            photoPath: {
-                [models.Sequelize.Op.ne]: null
-            },
+            // photoPath: {
+            //     [models.Sequelize.Op.ne]: null
+            // },
             voicePath: {
                 [models.Sequelize.Op.ne]: null
             }
