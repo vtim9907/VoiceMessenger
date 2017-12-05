@@ -28,9 +28,15 @@ var sidebar=new Vue({
          this.styleObject.height='100vh'
          this.styleObject.width='250px'
          this.styleObject.padding='0'
-         
+       
+         this.styleimg.display='flex'  
        }else{
-         this.styleObject=''
+         this.styleObject.position=''
+         this.styleObject.display=''
+         this.styleObject.height=''
+         this.styleObject.width=''
+         this.styleObject.padding=''
+         
          this.styleimg.display='none'  
        }
      },
