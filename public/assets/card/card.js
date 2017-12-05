@@ -15,6 +15,9 @@ var card = Vue.extend({
     mounted() {
         let self = this;
         console.log("card mounted");
+        let loading = new Promise(function(resolve, rejected) {
+            setTimeout(resolve, 2000);
+        })
         $.ajax({
             method: 'POST',
             url: './card',
@@ -36,7 +39,10 @@ var card = Vue.extend({
                         break;
                     default:
                 }
-                self.currentView = 'card-content'
+                loading.then(function() {
+                    $('#card_container').css('backgroundColor', 'white');
+                    self.currentView = 'card-content';
+                })
             },
 
             error: function() {
