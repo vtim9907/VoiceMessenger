@@ -1,25 +1,25 @@
 <html>
 <meta charset="utf-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <head>
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/Vue.js"></script>
+    <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/popper.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/Vue.js"></script>
     <script type="text/javascript" src="/service_worker.js"></script>
-    <script type="text/javascript" src="js/register.js"></script> 
+    <script type="text/javascript" src="assets/js/register.js"></script> 
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/login.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-light">
+    <nav class="navbar navbar-light navbar-expand-md">
         <div class="container-fluid">
             <nav class="navbar navbar-light">
                 <a class="navbar-brand" href="#">
-                    <img src="img/favicon.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                    <img src="assets/img/favicon.png" width="40rem" height="40rem" class="d-inline-block align-top" alt="">
                 </a>
             </nav>
             <div class="navbar-right btn-group" id="btns">
@@ -32,27 +32,24 @@
             </div>
         </div>
     </nav>
-    <div class="container paddingTop" id="form-container">
-
+            <h1>登入</h1>
+    <div class="container paddingTop row justify-content-center" id="form-container">
+      <div class='col-md-auto'>
         <keep-alive>
             <component :is="view"></component>
         </keep-alive>
-
+    </div>
     </div>
 
     <script type="text/x-template" id="login_form">
         <form class="form-horizontal" action="./login" method="POST">
             <div class="form-group row">
-                <label class="col-form-label col-sm-2 text-right">信箱：</label>
-                <div class="col-sm-10">
+                <label class="col-form-label  text-left">信箱：</label>
                     <input type="email" name="email" class="form-control" v-model="email">
-                </div>
             </div>
             <div class="form-group row">
-                <label class="col-form-label col-sm-2 text-right">密碼：</label>
-                <div class="col-sm-10">
+                <label class="col-form-label  text-left">密碼：</label>
                     <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password">
-                </div>
             </div>
             <div class="text-center">
                 <button type="submit">登入</button>
