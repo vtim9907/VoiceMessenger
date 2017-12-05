@@ -151,7 +151,7 @@
   </script>
 
 
-  <script type="text/x-template" id="chat">
+  <!-- <script type="text/x-template" id="chat">
       <div class="row">
         <div class="userListContainer col-sm-3">
           <div class="panel-heading">
@@ -171,6 +171,29 @@
             <form action="">
               <input id="message" autocomplete="off" placeholder="Type your message..."><button id="send">Send</button>
             </form>
+          </div>
+        </div>
+      </div>
+    </script> -->
+
+    <script type="text/x-template" id="chat">
+      <div class="container h-100">
+        <div class="row">
+        <div class="col-sm-2">
+          <ul class="list-group" style="">
+            <li class="list-group-item userName" v-for="i in userList" @click="selectReceiver(i)">{{i}}</li>
+          </ul>
+    
+        </div>
+          <div class="col-sm-6 chatBox">
+                <ul id="chatList" class="w-100 border border-dark h-75 list-group" style="overflow:scroll;">
+                  <li class="list-group-item" v-for="i in content">{{i}}</li>
+                </ul>
+                <br>
+                <textarea name="test" class="w-100" rows="4"></textarea>
+                <div class="text-center">
+                  <button class="btn-primary" @click="send()">send to {{user}}</button>
+                </div>
           </div>
         </div>
       </div>

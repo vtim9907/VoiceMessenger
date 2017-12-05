@@ -1,3 +1,94 @@
+/* #chat
+{
+  background: #E8FFFF;
+  height: auto;
+}
+.modal-content
+{
+  background-color: #CCCCFF;
+}
+#chat li
+{
+  list-style: none;
+}
+.userListContainer
+{
+  margin: 3%;
+  border: 1px #000000 solid;
+  background: #fff;
+  height: 50vh;
+  overflow-y: auto;
+}
+.panel-heading
+{
+  background: #96FFFF;
+}
+.userthumbnail
+{
+  width: 55px;
+  height: 55px;
+  display: inline-block;
+  border-radius: 8%;
+}
+#chat li a
+{
+  text-decoration: none;
+  color: #000;
+}
+.user
+{
+  margin-top: 1%;
+  height: 55px;
+  font-size: 20px;
+  margin-bottom: 2%;
+}
+.chatContainer
+{
+  margin-top: 3%;
+  border: 1px #000000 solid;
+  height: 50vh;
+background: #fff;
+}
+.messageFlow
+{
+  background: #FAFAFA;
+  overflow-y: auto;
+  height: 40vh;
+}
+.name
+{
+  margin-left: 45%;
+}
+#chat form
+{
+  height: 10vh;
+  background: #FAFAFA;
+  border: 1px #C9FFFF solid;
+}
+#message
+{
+  margin: 1% 0 1% 1%;
+  width: 80%;
+  height: 5vh;
+  font-size: 18px;
+}
+#send
+{
+  border: none;
+  background: #B8B8FF;
+  margin: 1% 0 1% 1%;
+  width:10%;
+  height: 5vh;
+}                                                    
+#chat section div
+{
+ max-width: 600px;
+ word-wrap: break-word;
+ word-break: normal;
+ margin-bottom: 50px;
+ line-height: 15px;
+} */
+
 #chat
 {
   background: #E8FFFF;
@@ -58,6 +149,16 @@ background: #fff;
 .name
 {
   margin-left: 45%;
+}
+.chatBox {
+  height: 600px;
+}
+.userName {
+  cursor: pointer;
+}
+.userName:hover{
+  background:gray;
+  color: rgb(255, 255, 255);
 }
 #chat form
 {

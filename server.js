@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var Sequelize = require('sequelize');
 var Vue = require('vue').default;
 var multer = require('multer');
 var flash = require('connect-flash');
@@ -19,6 +20,7 @@ var expressVue = require('express-vue');
 var validator = require('validator');
 var schedule = require('node-schedule');
 var shuffle = require('shuffle-array');
+var io = require('socket.io');
 
 //core
 var models = require('./lib/models');
@@ -232,6 +234,20 @@ if (config.email) {
     );
 }
 
+app.get('/userList', function (req, res) {
+    models.User.findAll().then(function (users) {
+        var userList = [];
+        for (var i in users) {//users is a list
+            console.log('session ' + req.session.passport.user);
+            if (req.session.passport.user !== users[i].id) {
+                userList.push(users[i].nickname);
+            }
+            console.log(users[i].nickname);
+            console.log(userList);
+        }
+        res.send(userList);
+    });
+});
 
 //logout
 app.get('/logout', function (req, res) {
@@ -385,7 +401,7 @@ app.post('/card', checkAuthentication, function (req, res) {
         console.log("Check user status:");
         console.log("User photo path: ", user.photoPath);
         console.log("User voice path: ", user.voicePath);
-        if (!user.photoPath || !user.voicePath ) {
+        if (!user.photoPath || !user.voicePath) {
             return Promise.reject(CARD_IMCOMPLETED_DATA);
         }
         return user;
@@ -417,7 +433,7 @@ app.post('/card', checkAuthentication, function (req, res) {
             voice: user.voicePath
         });
     }).catch(function (status) {
-        switch(status) {
+        switch (status) {
             //case CARD_PERMISSION_DENIED:
             case CARD_IMCOMPLETED_DATA:
             case CARD_NOT_FOUND:
@@ -452,6 +468,128 @@ function startListen() {
     });
 }
 
+function io_listen(server) {
+    var userMap = [];
+    var server_io = io.listen(server);//socket.io listen
+    server_io.use(function (socket, next) {
+        sessionMiddleware(socket.request, socket.request.res, next);
+    });
+    server_io.sockets.on('connection', function (socket) {
+        //console.log("sockets: "+server_io.sockets.connected);
+        userMap.push({ userId: socket.request.session.passport.user, socketId: socket.id });
+        userMap.forEach(function (item) {
+            if (!server_io.sockets.connected[item.socketId]) {
+                userMap.splice(userMap.indexOf(item), 1);
+            }
+        });
+        console.log(userMap);
+        console.log(socket.request.session.passport.user);
+        //socket.emit('message',{'message':'hello world'});
+        console.log("socket.id" + socket.id);
+        socket.on('chat', function (data) {
+            console.log(data);
+            models.User.findOne({
+                where: {
+                    nickname: data.toUser
+                }
+            }).then(function (user) {
+                console.log(user.id);
+                models.Chat.create({
+                    fromId: socket.request.session.passport.user,
+                    toId: user.id,
+                    content: data.msg,
+                    time: new Date
+                });
+                /*
+                var Op = Sequelize.Op;
+                for(var i=0;i<userMap.length;i++){
+                    if(userMap[i].userId === user.id || userMap[i].userId === socket.request.session.passport.user){
+                    var sendId = userMap[i].socketId;
+                    models.Chat.findAll({
+                        where: {
+                        //toId : req.session.passport.user
+                        [Op.or]:[{fromId:socket.request.session.passport.user,toId:user.id},
+                            {fromId:user.id,toId:socket.request.session.passport.user}]
+                        }
+                    }).then(function(msgs){
+                        var contents = [];
+                        for(var ii in msgs){
+                        //console.log(msgs[i].content);
+                        contents.push(msgs[ii].content);
+                        }
+                        server_io.sockets.connected[sendId].emit('chatContent',{content:contents});
+                    });
+                    }
+                }
+                */
+                var Op = Sequelize.Op;
+                models.User.findOne({
+                    where: {
+                        nickname: data.toUser
+                    }
+                }).then(function (user) {
+                    //console.log('user.id:'+user.id);
+
+                    models.Chat.findAll({
+                        where: {
+                            //toId : req.session.passport.user
+                            [Op.or]: [{ fromId: socket.request.session.passport.user, toId: user.id },
+                            { fromId: user.id, toId: socket.request.session.passport.user }]
+                        }
+                    }).then(function (msgs) {
+                        var contents = [];
+                        for (var i in msgs) {
+                            //console.log(msgs[i].content);
+                            contents.push(msgs[i].content);
+                        }
+                        //socket.emit('chatContent',{content:contents});
+                        //server_io.sockets.connected[socket.id].emit('chatContent',{content:contents});
+                        userMap.forEach(function (item) {
+                            console.log(item);
+
+                            if (item.userId === user.id || item.userId === socket.request.session.passport.user) {
+                                if (server_io.sockets.connected[item.socketId]) {
+                                    server_io.sockets.connected[item.socketId].emit('chatContent', { content: contents });
+                                }
+                                //server_io.sockets.connected[item.socketId].emit('chatContent',{content:contents});
+                            }
+
+                        });
+                    });
+
+                });
+            });
+        });
+        socket.on('getChatContent', function (data) {
+            //console.log(data);
+
+            var Op = Sequelize.Op;
+            models.User.findOne({
+                where: {
+                    nickname: data.toUser
+                }
+            }).then(function (user) {
+                //console.log('user.id:'+user.id);
+
+                models.Chat.findAll({
+                    where: {
+                        //toId : req.session.passport.user
+                        [Op.or]: [{ fromId: socket.request.session.passport.user, toId: user.id },
+                        { fromId: user.id, toId: socket.request.session.passport.user }]
+                    }
+                }).then(function (msgs) {
+                    var contents = [];
+                    for (var i in msgs) {
+                        //console.log(msgs[i].content);
+                        contents.push(msgs[i].content);
+                    }
+                    socket.emit('chatContent', { content: contents });
+                });
+            });
+        });
+    });
+}
+
 // sync db then start listen
 models.sequelize.sync({ force: true }).then(function () {
     startListen();
@@ -473,7 +611,7 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
                 [models.Sequelize.Op.ne]: null
             }
         }
-    }).then(function(users) {
+    }).then(function (users) {
 
         shuffle(users);
 
@@ -491,7 +629,7 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
             col[card] = group1[i].id;
             group2[i].update(Object.assign({}, col));
         }
-    }).catch(function(reason) {
+    }).catch(function (reason) {
         console.log(reason);
     });
 
