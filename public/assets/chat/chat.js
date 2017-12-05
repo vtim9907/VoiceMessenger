@@ -7,7 +7,8 @@ var chat = Vue.extend({
             content:[],
             user:'',
             inter:{},
-            socket:undefined
+            socket:undefined,
+            not_found: true
         }
     },
     methods: {
@@ -53,22 +54,22 @@ var chat = Vue.extend({
             this.socket = io.connect();
         }
         $.post('getFriend',function(data){
-            console.log(data);
-            var nickname = [];
-            var photoPath = [];
-            data.forEach(function(item){
-                nickname.push(item.nickname);
-                photoPath.push(item.photoPath);
-            });
-
-            self.userList = nickname;
-
-            self.user = self.userList[0];
-            
-            if(self.user){
-                self.socket.emit('getChatContent',{toUser: self.user});
+            if (data === "no") {
+                self.not_found = false;
+                var nickname = [];
+                var photoPath = [];
+                data.forEach(function(item){
+                    nickname.push(item.nickname);
+                    photoPath.push(item.photoPath);
+                });
+                self.userList = nickname;
+                self.user = self.userList[0];
+                if(self.user){
+                    self.socket.emit('getChatContent',{toUser: self.user});
+                }
+            } else {
+                self.not_found = true;
             }
-            
         });
         //this.user = this.userList[0];
         /*
