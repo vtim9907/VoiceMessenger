@@ -467,6 +467,7 @@ function startListen() {
         logger.info('%s Server listening at port %d', schema, config.port);
         config.maintenance = false;
     });
+    io_listen(server);
 }
 
 function io_listen(server) {
