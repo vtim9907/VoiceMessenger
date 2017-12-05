@@ -36,11 +36,34 @@ var chat = Vue.extend({
     },
     created: function(){
         var self = this;
+        /*
         $.get('userList',function(data){
             console.log(data);
             self.userList = data;
 
             self.user = self.userList[0];
+            if(self.user){
+                self.socket.emit('getChatContent',{toUser: self.user});
+            }
+            
+        });
+        */
+        if(!this.socket){
+            this.socket = io.connect();
+        }
+        $.post('getFriend',function(data){
+            console.log(data);
+            var nickname = [];
+            var photoPath = [];
+            data.forEach(function(item){
+                nickname.push(item.nickname);
+                photoPath.push(item.photoPath);
+            });
+
+            self.userList = nickname;
+
+            self.user = self.userList[0];
+            
             if(self.user){
                 self.socket.emit('getChatContent',{toUser: self.user});
             }
@@ -54,9 +77,7 @@ var chat = Vue.extend({
         });
         */
         //this.inter = setInterval(this.getMsg,500);
-        if(!this.socket){
-            this.socket = io.connect();
-        }
+        
         
         /*
         this.socket.on('message',function(data){
@@ -72,6 +93,10 @@ var chat = Vue.extend({
     },
     deactivated: function(){
         //clearInterval(this.inter);
+    },
+    destroyed: function(){
+        console.log('destroyed');
+        this.socket.disconnect();
     }
 });
 
