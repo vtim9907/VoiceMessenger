@@ -125,7 +125,7 @@ var record = Vue.extend({
 		},
 		encode: function(){
 			if (!blockRecord) {
-				blockRecord = 5;
+				blockRecord = 15;
 				var self = this;
 				this.message = 'recording'; 
 				this.showButton = false; 
@@ -134,7 +134,7 @@ var record = Vue.extend({
 				this.inter = setInterval(function(){
 					self.recTime += 1;
 					blockRecord -= 1;
-					if(self.recTime >= 5){
+					if(self.recTime >= 15){
 						clearInterval(self.inter);
 						console.log("stop");
 						self.stop();
