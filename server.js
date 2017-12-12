@@ -73,8 +73,8 @@ var sessionStore = new SequelizeStore({
 //compression
 app.use(compression());
 
-//for security
-app.use(helmet());
+// for security :: can't use on luffy ...
+// app.use(helmet());
 
 app.use(cookieParser());
 
@@ -86,14 +86,14 @@ app.use('/photo', express.static(path.join(__dirname, 'photo')));
 
 //session
 var sessionMiddleware = session({
-	secret: config.sessionsecret,
-	store: sessionStore,
-	resave: false, //don't save session if unmodified
-	saveUninitialized: true, //always create session to ensure the origin
-	rolling: true, // reset maxAge on every response
-	cookie: {
-		maxAge: config.sessionlife
-	}
+    secret: config.sessionsecret,
+    store: sessionStore,
+    resave: false, //don't save session if unmodified
+    saveUninitialized: true, //always create session to ensure the origin
+    rolling: true, // reset maxAge on every response
+    cookie: {
+        maxAge: config.sessionlife
+    }
 });
 app.use(sessionMiddleware);
 
@@ -148,7 +148,7 @@ app.get("/givename", checkAuthentication, function (req, res, next) {
             id: req.session.passport.user
         }
     }).then(function (user) {
-        return res.send("Welcome, " + user.nickname + " !!");
+        return res.send(user.nickname);
     }).catch(function (err) {
         logger.error(err);
         return done(err);
@@ -501,91 +501,116 @@ function io_listen(server) {
                     toId: user.id,
                     content: data.msg,
                     time: new Date
-                });
-                /*
-                var Op = Sequelize.Op;
-                for(var i=0;i<userMap.length;i++){
-                    if(userMap[i].userId === user.id || userMap[i].userId === socket.request.session.passport.user){
-                    var sendId = userMap[i].socketId;
-                    models.Chat.findAll({
+                }).then(function () {
+                    models.User.findOne({
                         where: {
-                        //toId : req.session.passport.user
-                        [Op.or]:[{fromId:socket.request.session.passport.user,toId:user.id},
-                            {fromId:user.id,toId:socket.request.session.passport.user}]
+                            id: socket.request.session.passport.user
                         }
-                    }).then(function(msgs){
-                        var contents = [];
-                        for(var ii in msgs){
-                        //console.log(msgs[i].content);
-                        contents.push(msgs[ii].content);
-                        }
-                        server_io.sockets.connected[sendId].emit('chatContent',{content:contents});
-                    });
-                    }
-                }
-                */
-                var Op = Sequelize.Op;
-                models.User.findOne({
-                    where: {
-                        nickname: data.toUser
-                    }
-                }).then(function (user) {
-                    //console.log('user.id:'+user.id);
-
-                    models.Chat.findAll({
-                        where: {
-                            //toId : req.session.passport.user
-                            [Op.or]: [{ fromId: socket.request.session.passport.user, toId: user.id },
-                            { fromId: user.id, toId: socket.request.session.passport.user }]
-                        }
-                    }).then(function (msgs) {
-                        var contents = [];
-                        for (var i in msgs) {
-                            //console.log(msgs[i].content);
-                            contents.push(msgs[i].content);
-                        }
-                        //socket.emit('chatContent',{content:contents});
-                        //server_io.sockets.connected[socket.id].emit('chatContent',{content:contents});
-                        userMap.forEach(function (item) {
-                            console.log(item);
-
-                            if (item.userId === user.id || item.userId === socket.request.session.passport.user) {
-                                if (server_io.sockets.connected[item.socketId]) {
-                                    server_io.sockets.connected[item.socketId].emit('chatContent', { content: contents });
-                                }
-                                //server_io.sockets.connected[item.socketId].emit('chatContent',{content:contents});
+                    }).then(function (socketUser) {
+                        var Op = Sequelize.Op;
+                        models.Chat.findAll({
+                            where: {
+                                [Op.or]: [
+                                    {
+                                        fromId: socketUser.id,
+                                        toId: user.id
+                                    },
+                                    {
+                                        fromId: user.id,
+                                        toId: socketUser.id
+                                    }
+                                ]
                             }
+                        }).then(function (msgs) {
+                            var contents = [];
+                            for (var i in msgs) {
+                                let temp = {
+                                    message: '',
+                                    name1: '',
+                                    name2: '',
+                                }
+                                temp.message = msgs[i].content;
+                                if (msgs[i].fromId == user.id) {
+                                    temp.name1 = user.nickname;
+                                    temp.name2 = socketUser.nickname;
+                                } else {
+                                    temp.name2 = user.nickname;
+                                    temp.name1 = socketUser.nickname;
+                                }
+                                contents.push(temp);
+                                console.log("------------------------")
+                                console.log(temp)
+                                console.log("------------------------")
+                                console.log("++++++++++++++")
+                                console.log(contents)
+                                console.log("++++++++++++++")
+                            }
+                            //socket.emit('chatContent',{content:contents});
+                            //server_io.sockets.connected[socket.id].emit('chatContent',{content:contents});
+                            userMap.forEach(function (item) {
+                                console.log(item);
 
+                                if (item.userId === user.id || item.userId === socket.request.session.passport.user) {
+                                    if (server_io.sockets.connected[item.socketId]) {
+                                        server_io.sockets.connected[item.socketId].emit('chatContent', {
+                                            content: contents
+                                        });
+                                    }
+                                    //server_io.sockets.connected[item.socketId].emit('chatContent',{content:contents});
+                                }
+                            });
                         });
                     });
-
                 });
             });
         });
         socket.on('getChatContent', function (data) {
-            //console.log(data);
-
             var Op = Sequelize.Op;
             models.User.findOne({
                 where: {
                     nickname: data.toUser
                 }
             }).then(function (user) {
-                //console.log('user.id:'+user.id);
-
-                models.Chat.findAll({
+                models.User.findOne({
                     where: {
-                        //toId : req.session.passport.user
-                        [Op.or]: [{ fromId: socket.request.session.passport.user, toId: user.id },
-                        { fromId: user.id, toId: socket.request.session.passport.user }]
+                        id: socket.request.session.passport.user
                     }
-                }).then(function (msgs) {
-                    var contents = [];
-                    for (var i in msgs) {
-                        //console.log(msgs[i].content);
-                        contents.push(msgs[i].content);
-                    }
-                    socket.emit('chatContent', { content: contents });
+                }).then(function (socketUser) {
+                    models.Chat.findAll({
+                        where: {
+                            [Op.or]: [
+                                {
+                                    fromId: socketUser.id,
+                                    toId: user.id
+                                },
+                                {
+                                    fromId: user.id,
+                                    toId: socketUser.id
+                                }
+                            ]
+                        }
+                    }).then(function (msgs) {
+                        var contents = [];
+                        for (var i in msgs) {
+                            let temp = {
+                                message: '',
+                                name1: '',
+                                name2: '',
+                            }
+                            temp.message = msgs[i].content;
+                            if (msgs[i].fromId == user.id) {
+                                temp.name1 = user.nickname;
+                                temp.name2 = socketUser.nickname;
+                            } else {
+                                temp.name2 = user.nickname;
+                                temp.name1 = socketUser.nickname;
+                            }
+                            contents.push(temp);
+                        }
+                        socket.emit('chatContent', {
+                            content: contents
+                        });
+                    });
                 });
             });
         });

@@ -208,14 +208,18 @@
              </ul>
             </div>
             <div class="col-sm-6 chatBox">
-              <ul id="chatList" class="w-100 border border-dark h-75 list-group" style="overflow:scroll;">
-                <li class="list-group-item" v-for="i in content">{{i}}</li>
+              <ul id="chatList" class="w-100 border border-dark h-75 list-group customScrollBar scrollbar" style="overflow:scroll;">
+                <div v-for="i in content">
+                  <div v-if="i.name1 == myName" class="customScrollBar">
+                    <li class="list-group-item beautify  userText" >{{i.message}}</li>
+                  </div>
+                  <div v-else>
+                    <li class="list-group-item otherChat beautify  otherText" >{{i.name1}} : {{i.message}}</li>
+                  </div>
+                </div>
               </ul>
               <br>
-              <textarea name='test' class="w-100" rows="4"></textarea>
-              <div class="text-center">
-                <button class="btn-primary" @click="send()">send to {{user}}</button>
-              </div>
+              <textarea id="chatTextarea" name='test' class="w-100" rows="4" @keydown.enter.prevent="send" placeholder="請輸入訊息..."></textarea>
             </div>
           </div>
         </div>
