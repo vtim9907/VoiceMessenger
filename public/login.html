@@ -2,16 +2,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <head>
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/Vue.js"></script>
+    <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/popper.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/Vue.js"></script>
     <script type="text/javascript" src="/service_worker.js"></script>
-    <script type="text/javascript" src="js/register.js"></script> 
+    <script type="text/javascript" src="assets/js/register.js"></script> 
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/login.css">
 </head>
 
 <body>
@@ -32,12 +32,16 @@
             </div>
         </div>
     </nav>
-    <div class="container paddingTop row justify-content-center" id="form-container">
-      <div class='col-md-auto'>
-        <keep-alive>
+
+    <div class="paddingTop row justify-content-center" id="form-container">
+        <div class='col-md-4' id='card'>
+          <card_content></card_content> 
+        </div>
+        <div class='col-md-4'>
+          <keep-alive>
             <component :is="view"></component>
-        </keep-alive>
-    </div>
+          </keep-alive>
+        </div>
     </div>
 
     <script type="text/x-template" id="login_form"> 
@@ -89,6 +93,28 @@
         </form>
       </div>
     </script>
+    <script type="text/x-template" id="card_content">
+      <div>
+        <div class="card text-center" style='overflow:hidden' >
+        <br></br>
+           <img class="card-img-top" :src="photo" style="width:20rem;display:block; margin:auto;">
+         <div class="card-body">
+            <h1 class="card-title">{{name}}</h1>
+          </div>
+          <div class="card-body">
+            <audio id="voice" @ended="handleEnded()">
+              <source :src="voice" type="audio/mpeg">
+            </audio>
+            <button type="button" class="btn btn-info btn-lg" @click="playOrStop()">
+              <i class="fa fa-play" aria-hidden="true"></i> {{playerMsg}}
+            </button>
+          </div>
+          <br></br>
+          <a href="/friendRequest" class="btn btn-primary">送出邀請</a>
+        </div>
+      </div>
+   </script>
+
 
     <script>
         Vue.component('loginView', {
@@ -158,6 +184,37 @@
         })
     </script>
 
+    <script>
+      Vue.component('card_content', {
+          template: '#card_content',
+          data: function() {
+              return {
+                  name:'學妹',   
+                  photo: 'http://img1.gtimg.com/6/636/63659/6365986_550x550_0.jpg',
+                  voice:'',
+                  playerMsg: "Play"
+              }
+          },
+          methods: {
+              playOrStop: function() {
+                  let voice = document.getElementById("voice");
+                  if (this.playerMsg == "Play") {
+                      this.playerMsg = "Stop";
+                      voice.play();
+                  } else {
+                      this.playerMsg = "Play";
+                      voice.pause();
+                      voice.currentTime = 0;
+                  }
+              },
+              handleEnded: function() {
+                  this.playerMsg = "Play";
+              }
+          }
+      })
+    new Vue({el:"#card"});
+    </script>
+  <script type="text/javascript" src="assets/card/card.js"></script>
 </body>
 
 </html>
