@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var Sequelize = require('sequelize');
 var Vue = require('vue').default;
 var multer = require('multer');
 var flash = require('connect-flash');
@@ -19,6 +20,7 @@ var expressVue = require('express-vue');
 var validator = require('validator');
 var schedule = require('node-schedule');
 var shuffle = require('shuffle-array');
+var io = require('socket.io');
 
 //core
 var models = require('./lib/models');
@@ -71,20 +73,19 @@ var sessionStore = new SequelizeStore({
 //compression
 app.use(compression());
 
-//for security
-app.use(helmet());
+// for security :: can't use on luffy ...
+// app.use(helmet());
 
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public', 'assets')));
 app.use('/service_worker.js', express.static(path.join(__dirname, 'public', 'service_worker.js')));
 app.use('/manifest.json', express.static(path.join(__dirname, 'public', 'manifest.json')));
-app.use('/notConnect.html', express.static(path.join(__dirname, 'public', 'notConnect.html')));
 app.use('/mp3', express.static(path.join(__dirname, 'mp3')));
 app.use('/photo', express.static(path.join(__dirname, 'photo')));
 
 //session
-app.use(session({
+var sessionMiddleware = session({
     secret: config.sessionsecret,
     store: sessionStore,
     resave: false, //don't save session if unmodified
@@ -93,20 +94,10 @@ app.use(session({
     cookie: {
         maxAge: config.sessionlife
     }
-}));
+});
+app.use(sessionMiddleware);
 
 app.use(flash());
-
-// //express Vue
-// var vueOptions = {
-//     rootPath: path.join(__dirname,  'public', 'views'),
-//     layout: {
-//         start: '<div id="app">',
-//         end: '</div>'
-//     }
-// };
-// var expressVueMiddleware = expressVue.init(vueOptions);
-// app.use(expressVueMiddleware);
 
 //passport 
 app.use(passport.initialize());
@@ -157,7 +148,7 @@ app.get("/givename", checkAuthentication, function (req, res, next) {
             id: req.session.passport.user
         }
     }).then(function (user) {
-        return res.send("Welcome, " + user.nickname + " !!");
+        return res.send(user.nickname);
     }).catch(function (err) {
         logger.error(err);
         return done(err);
@@ -244,6 +235,20 @@ if (config.email) {
     );
 }
 
+app.get('/userList', function (req, res) {
+    models.User.findAll().then(function (users) {
+        var userList = [];
+        for (var i in users) {//users is a list
+            console.log('session ' + req.session.passport.user);
+            if (req.session.passport.user !== users[i].id) {
+                userList.push(users[i].nickname);
+            }
+            console.log(users[i].nickname);
+            console.log(userList);
+        }
+        res.send(userList);
+    });
+});
 
 //logout
 app.get('/logout', function (req, res) {
@@ -255,27 +260,16 @@ app.get('/logout', function (req, res) {
 });
 
 // voice
-var wav = multer({ dest: 'wav/' });
-app.post('/wav', wav.single('wav'), function (req, res) {
-    console.log(req.headers);
-    console.log(req.file);
-    res.sendStatus(200);
-});
-
 var mp3 = multer({ dest: 'mp3/' });
 app.post('/mp3', mp3.single('mp3'), function (req, res) {
-    console.log("------------------------")
-    console.log("------------------------")
     models.User.findOne({
         where: {
             id: req.session.passport.user
         }
     }).then(function (user) {
         if (user.createOrModifyVoicePath(req.file.filename)) {
-            console.log("++++++++++++++++++++++++")
             return res.redirect('/');
         }
-        console.log("????????????????????????")
         return res.send('an error occurred!');
     }).catch(function (err) {
         logger.error(err);
@@ -408,7 +402,7 @@ app.post('/card', checkAuthentication, function (req, res) {
         console.log("Check user status:");
         console.log("User photo path: ", user.photoPath);
         console.log("User voice path: ", user.voicePath);
-        if (!user.photoPath || !user.voicePath ) {
+        if (/* !user.photoPath || */!user.voicePath) {
             return Promise.reject(CARD_IMCOMPLETED_DATA);
         }
         return user;
@@ -440,7 +434,7 @@ app.post('/card', checkAuthentication, function (req, res) {
             voice: user.voicePath
         });
     }).catch(function (status) {
-        switch(status) {
+        switch (status) {
             //case CARD_PERMISSION_DENIED:
             case CARD_IMCOMPLETED_DATA:
             case CARD_NOT_FOUND:
@@ -473,6 +467,154 @@ function startListen() {
         logger.info('%s Server listening at port %d', schema, config.port);
         config.maintenance = false;
     });
+    io_listen(server);
+}
+
+function io_listen(server) {
+    var userMap = [];
+    var server_io = io.listen(server);//socket.io listen
+    server_io.use(function (socket, next) {
+        sessionMiddleware(socket.request, socket.request.res, next);
+    });
+    server_io.sockets.on('connection', function (socket) {
+        //console.log("sockets: "+server_io.sockets.connected);
+        userMap.push({ userId: socket.request.session.passport.user, socketId: socket.id });
+        userMap.forEach(function (item) {
+            if (!server_io.sockets.connected[item.socketId]) {
+                userMap.splice(userMap.indexOf(item), 1);
+            }
+        });
+        console.log(userMap);
+        console.log(socket.request.session.passport.user);
+        //socket.emit('message',{'message':'hello world'});
+        console.log("socket.id" + socket.id);
+        socket.on('chat', function (data) {
+            console.log(data);
+            models.User.findOne({
+                where: {
+                    nickname: data.toUser
+                }
+            }).then(function (user) {
+                console.log(user.id);
+                models.Chat.create({
+                    fromId: socket.request.session.passport.user,
+                    toId: user.id,
+                    content: data.msg,
+                    time: new Date
+                }).then(function () {
+                    models.User.findOne({
+                        where: {
+                            id: socket.request.session.passport.user
+                        }
+                    }).then(function (socketUser) {
+                        var Op = Sequelize.Op;
+                        models.Chat.findAll({
+                            where: {
+                                [Op.or]: [
+                                    {
+                                        fromId: socketUser.id,
+                                        toId: user.id
+                                    },
+                                    {
+                                        fromId: user.id,
+                                        toId: socketUser.id
+                                    }
+                                ]
+                            }
+                        }).then(function (msgs) {
+                            var contents = [];
+                            for (var i in msgs) {
+                                let temp = {
+                                    message: '',
+                                    name1: '',
+                                    name2: '',
+                                }
+                                temp.message = msgs[i].content;
+                                if (msgs[i].fromId == user.id) {
+                                    temp.name1 = user.nickname;
+                                    temp.name2 = socketUser.nickname;
+                                } else {
+                                    temp.name2 = user.nickname;
+                                    temp.name1 = socketUser.nickname;
+                                }
+                                contents.push(temp);
+                                console.log("------------------------")
+                                console.log(temp)
+                                console.log("------------------------")
+                                console.log("++++++++++++++")
+                                console.log(contents)
+                                console.log("++++++++++++++")
+                            }
+                            //socket.emit('chatContent',{content:contents});
+                            //server_io.sockets.connected[socket.id].emit('chatContent',{content:contents});
+                            userMap.forEach(function (item) {
+                                console.log(item);
+
+                                if (item.userId === user.id || item.userId === socket.request.session.passport.user) {
+                                    if (server_io.sockets.connected[item.socketId]) {
+                                        server_io.sockets.connected[item.socketId].emit('chatContent', {
+                                            content: contents
+                                        });
+                                    }
+                                    //server_io.sockets.connected[item.socketId].emit('chatContent',{content:contents});
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        socket.on('getChatContent', function (data) {
+            var Op = Sequelize.Op;
+            models.User.findOne({
+                where: {
+                    nickname: data.toUser
+                }
+            }).then(function (user) {
+                models.User.findOne({
+                    where: {
+                        id: socket.request.session.passport.user
+                    }
+                }).then(function (socketUser) {
+                    models.Chat.findAll({
+                        where: {
+                            [Op.or]: [
+                                {
+                                    fromId: socketUser.id,
+                                    toId: user.id
+                                },
+                                {
+                                    fromId: user.id,
+                                    toId: socketUser.id
+                                }
+                            ]
+                        }
+                    }).then(function (msgs) {
+                        var contents = [];
+                        for (var i in msgs) {
+                            let temp = {
+                                message: '',
+                                name1: '',
+                                name2: '',
+                            }
+                            temp.message = msgs[i].content;
+                            if (msgs[i].fromId == user.id) {
+                                temp.name1 = user.nickname;
+                                temp.name2 = socketUser.nickname;
+                            } else {
+                                temp.name2 = user.nickname;
+                                temp.name1 = socketUser.nickname;
+                            }
+                            contents.push(temp);
+                        }
+                        socket.emit('chatContent', {
+                            content: contents
+                        });
+                    });
+                });
+            });
+        });
+    });
 }
 
 // sync db then start listen
@@ -489,14 +631,14 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
 
     models.User.findAll({
         where: {
-            photoPath: {
-                [models.Sequelize.Op.ne]: null
-            },
+            // photoPath: {
+            //     [models.Sequelize.Op.ne]: null
+            // },
             voicePath: {
                 [models.Sequelize.Op.ne]: null
             }
         }
-    }).then(function(users) {
+    }).then(function (users) {
 
         shuffle(users);
 
@@ -514,7 +656,7 @@ schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
             col[card] = group1[i].id;
             group2[i].update(Object.assign({}, col));
         }
-    }).catch(function(reason) {
+    }).catch(function (reason) {
         console.log(reason);
     });
 

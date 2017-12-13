@@ -44,8 +44,27 @@ var sidebar=new Vue({
        $('#navbarNav').collapse('hide');        
        bus.$emit('PageChange',i);
       
+     },
+     updatePhoto: function() {
+         let self = this;
+         $.ajax({
+              method: 'GET',
+              url: './getPhoto',
+              success: function(path) {
+                  if (path !== "") {
+                      self.photo = path;
+                  }
+              },
+         });
      }
-   } 
+   },
+   created() {
+       this.updatePhoto();
+        //    let self = this;
+        //    bus.$on('updatePhoto', function() {
+        //        self.updatePhoto();
+        //    });
+    }
 })
 var mainPage=new Vue({
    el:"#mainPage",

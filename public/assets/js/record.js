@@ -8,7 +8,9 @@ var record = Vue.extend({
 			stream: {},
 			recorder: {},
 			recTime: 0,
-			inter: undefined
+			inter: undefined,
+			message: '',
+			showButton: false
 		};
 	},
 	methods: {
@@ -67,6 +69,7 @@ var record = Vue.extend({
 	        }
 	    },
 	    mp3: function(){
+			this.message = 'mp3 encoding';
 	    	var fileReader = new FileReader();
 		  	var a = this;
 		  	fileReader.onload = function(){
@@ -75,6 +78,8 @@ var record = Vue.extend({
 		  			var encode_worker = new Worker('./js/encode_worker.js');
 		  			encode_worker.postMessage(fileReader.result);
 		  			encode_worker.onmessage = function(e){
+						a.message = "encode finish"; 
+						a.showButton = true; 
 		  				console.log('worker return ' + e.data);
 		  				var mp3 = document.getElementById('mp3Stereo');
 						  mp3.src = window.URL.createObjectURL(e.data);
@@ -120,21 +125,40 @@ var record = Vue.extend({
 		},
 		encode: function(){
 			if (!blockRecord) {
-				blockRecord = 5;
+				blockRecord = 15;
 				var self = this;
+				this.message = 'recording'; 
+				this.showButton = false; 
 				self.recTime = 0;
 				this.start();
 				this.inter = setInterval(function(){
 					self.recTime += 1;
 					blockRecord -= 1;
-					if(self.recTime >= 5){
+					if(self.recTime >= 15){
 						clearInterval(self.inter);
 						console.log("stop");
 						self.stop();
 						console.log(self.recordRTC.blob);
+						self.message = 'record finished'; 
 					}
 				},1000);	
 			}
+		}, 
+		play: function(){ 
+		  this.message = 'audio playing'; 
+		  var audio = document.getElementById('mp3Stereo'); 
+		  audio.play(); 
+		  var self = this; 
+		  audio.onended = function(){ 
+			self.message = 'audio end'; 
+		  }; 
+		   
+		}, 
+		clicked: function(){ 
+		  $('#exampleModal').modal({ 
+			backdrop : 'static' 
+		  }); 
+		  this.encode(); 
 		}
 	}
 });

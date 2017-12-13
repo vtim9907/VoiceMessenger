@@ -68,14 +68,31 @@
   </div>
 
   <script type="text/x-template" id="record">
-      <div class="row justify-content-center">
-        <canvas class="w-75 h-75 mw-100 border rounded border-primary" id="canvas"></canvas>
-        <audio class="col-12" :id="i" controls v-for="i in audioList"></audio>
-        <div class="col-12">{{recTime}}</div>
-        <div class="btn-group">
-          <button type="button" class="btn" @click="encode()" value="start">start</button>
+    <div class="row justify-content-center">
+      <div class="">
+        <div class="col-12 text-center">click picture to start recording</div>
+        <img class="w-100" src="/img/microphone.png" @click="clicked()">
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{message}}</h5>
+            </div>
+            <div class="modal-body">
+              <canvas class="w-100 h-75 border rounded border-primary" id="canvas"></canvas>
+              <audio class="col-8 d-none" :id="i" controls v-for="i in audioList"></audio> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" v-if="showButton">Close</button>
+              <button type="button" class="btn btn-primary" @click="encode()" v-if="showButton">record</button>
+              <button type="button" class="btn btn-primary" @click="play()" v-if="showButton">play</button>
+            </div>
+          </div>
         </div>
-      </div>   
+      </div>
+    </div >   
     </script>
 
   <script type="text/x-template" id="edit">
@@ -151,7 +168,7 @@
   </script>
 
 
-  <script type="text/x-template" id="chat">
+  <!-- <script type="text/x-template" id="chat">
       <div class="row">
         <div class="userListContainer col-sm-3">
           <div class="panel-heading">
@@ -174,6 +191,39 @@
           </div>
         </div>
       </div>
+    </script> -->
+
+    <script type="text/x-template" id="chat">
+      <div class="container h-100" style='padding:16px'>
+        <div class="text-center" v-if="not_found">
+          <div class="container">
+            <h1>還沒有朋友...</h1>
+          </div>
+        </div>
+        <div v-else>
+          <div class="row">
+            <div class="col-sm-2">
+             <ul class="list-group" style="">
+                <li class="list-group-item userName" v-for="i in userList" @click="selectReceiver(i)">{{i}}</li>
+             </ul>
+            </div>
+            <div class="col-sm-6 chatBox">
+              <ul id="chatList" class="w-100 border border-dark h-75 list-group customScrollBar scrollbar" style="overflow:scroll;">
+                <div v-for="i in content">
+                  <div v-if="i.name1 == myName" class="customScrollBar">
+                    <li class="list-group-item beautify  userText" >{{i.message}}</li>
+                  </div>
+                  <div v-else>
+                    <li class="list-group-item otherChat beautify  otherText" >{{i.name1}} : {{i.message}}</li>
+                  </div>
+                </div>
+              </ul>
+              <br>
+              <textarea id="chatTextarea" name='test' class="w-100" rows="4" @keydown.enter.prevent="send" placeholder="請輸入訊息..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
     </script>
 
   <!-- Optional JavaScript -->
@@ -184,6 +234,7 @@
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
     crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> 
   <script type="text/javascript" src="js/record.js"></script>
   <script type="text/javascript" src="card/card.js"></script>
   <script type="text/javascript" src="chat/chat.js"></script>

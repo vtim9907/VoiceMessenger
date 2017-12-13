@@ -1,3 +1,137 @@
+/* #chat
+{
+  background: #E8FFFF;
+  height: auto;
+}
+.modal-content
+{
+  background-color: #CCCCFF;
+}
+#chat li
+{
+  list-style: none;
+}
+.userListContainer
+{
+  margin: 3%;
+  border: 1px #000000 solid;
+  background: #fff;
+  height: 50vh;
+  overflow-y: auto;
+}
+.panel-heading
+{
+  background: #96FFFF;
+}
+.userthumbnail
+{
+  width: 55px;
+  height: 55px;
+  display: inline-block;
+  border-radius: 8%;
+}
+#chat li a
+{
+  text-decoration: none;
+  color: #000;
+}
+.user
+{
+  margin-top: 1%;
+  height: 55px;
+  font-size: 20px;
+  margin-bottom: 2%;
+}
+.chatContainer
+{
+  margin-top: 3%;
+  border: 1px #000000 solid;
+  height: 50vh;
+background: #fff;
+}
+.messageFlow
+{
+  background: #FAFAFA;
+  overflow-y: auto;
+  height: 40vh;
+}
+.name
+{
+  margin-left: 45%;
+}
+#chat form
+{
+  height: 10vh;
+  background: #FAFAFA;
+  border: 1px #C9FFFF solid;
+}
+#message
+{
+  margin: 1% 0 1% 1%;
+  width: 80%;
+  height: 5vh;
+  font-size: 18px;
+}
+#send
+{
+  border: none;
+  background: #B8B8FF;
+  margin: 1% 0 1% 1%;
+  width:10%;
+  height: 5vh;
+}                                                    
+#chat section div
+{
+ max-width: 600px;
+ word-wrap: break-word;
+ word-break: normal;
+ margin-bottom: 50px;
+ line-height: 15px;
+} */
+.beautify {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 8px;
+  max-width: 60%;
+}
+.userText
+{
+  float: right;
+}
+.otherText
+{
+  float: left;
+}
+.scrollbar
+{
+	float: left;
+	height: 300px;
+	width: 65px;
+	background: #F5F5F5;
+	overflow-y: scroll;
+	margin-bottom: 25px;
+}
+
+.customScrollBar::-webkit-scrollbar-track
+{
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.customScrollBar::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.customScrollBar:hover::-webkit-scrollbar-thumb
+{
+  background-color: rgba(214, 214, 214, 0.671);
+}
+
+.customScrollBar::-webkit-scrollbar-thumb
+{
+	background-color: #ffffff00;
+}
 #chat
 {
   background: #E8FFFF;
@@ -58,6 +192,19 @@ background: #fff;
 .name
 {
   margin-left: 45%;
+}
+.chatBox {
+  height: 600px;
+}
+.userName {
+  cursor: pointer;
+}
+.userName:hover{
+  background:gray;
+  color: rgb(255, 255, 255);
+}
+.otherChat {
+  background-color: rgba(199, 247, 152, 0.678)
 }
 #chat form
 {
