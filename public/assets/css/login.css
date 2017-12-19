@@ -1,5 +1,5 @@
 .navbar-light {
-    background-color: rgb(57, 63, 85);
+    background-color: rgb(28, 38, 51);
     padding:0 0 0 10px;
 }
 body{
@@ -11,13 +11,16 @@ html {
 #btns{
   margin-right:10px;
 }
-h1{
+.ltext{
   text-align:center;
   margin:1rem;
   padding-top:10px;
 }
+.vmtext{
+  color: rgb(0, 140, 255);
+}
 label{
-  font-size:20px;
+  font-size:17px;
 }
 #form-container{
   margin:auto;

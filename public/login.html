@@ -1,13 +1,14 @@
 <html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <head>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="js/popper.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/Vue.js"></script>
     <script type="text/javascript" src="/service_worker.js"></script>
-    <script type="text/javascript" src="js/register.js"></script> 
+    <script type="text/javascript" src="js/register.js"></script>
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -24,10 +25,10 @@
             </nav>
             <div class="navbar-right btn-group" id="btns">
                 <!-- <a href="login"> -->
-                    <button type="button" class="btn-success" id="login_btn" @click="goPath('login')">登入</button>
+                <button class="btn btn-primary" id="login_btn" @click="goPath('login')">登入</button>
                 <!-- </a>
                 <a href="register"> -->
-                    <button type="button" class="btn-success" id="register_btn" @click="goPath('register')">註冊</button>
+                <button class="btn btn-primary" id="register_btn" @click="goPath('register')">註冊</button>
                 <!-- </a> -->
             </div>
         </div>
@@ -35,67 +36,89 @@
 
     <div class="paddingTop row justify-content-center" id="form-container">
         <div class='col-md-4' id='card'>
-          <card_content></card_content> 
+            <div class="container-fluid text-center" style="padding-top:10px;padding-bottom:8px;">
+                <h3>很多人想認識你，趕快登入！</h3>
+            </div>
+            <card_content></card_content>
         </div>
         <div class='col-md-4'>
-          <keep-alive>
-            <component :is="view"></component>
-          </keep-alive>
+            <keep-alive>
+                <component :is="view"></component>
+            </keep-alive>
         </div>
     </div>
 
     <script type="text/x-template" id="login_form"> 
       <div>
-        <h1>登入</h1>
+        <h2 class="ltext">登入 <span class="vmtext">Voice Messenger</span></h2>
+        <div class="container" style="padding-top:5vh;">
         <form class="form-horizontal" action="./login" method="POST">
-          <div class="form-group row">
-            <label class="col-form-label  text-left">信箱：</label>
-            <input type="email" name="email" class="form-control" v-model="email">
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label  text-left">密碼：</label>
-            <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password">
-          </div>
+            <div class="form-group row">
+                    <label class="col-form-label  col-sm-2">信箱</label>
+                    <div class="col-sm-10">
+                        <input type="email" name="email" class="form-control" v-model="email" placeholder="常用信箱">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-form-label col-sm-2">密碼</label>
+                    <div class="col-sm-10">
+                      <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password" placeholder="密碼">
+                    </div>
+                  </div>
           <div class="text-center">
-            <button type="submit">登入</button>
+            <button class="btn btn-info" type="submit">登入</button>
           </div>
         </form>
+        </div>
       </div>
     </script>
 
     <script type="text/x-template" id="register_form">
       <div> 
-        <h1>註冊</h1>
+        <h2 class="ltext">立即註冊</h2>
+        <div class="container" style="padding-top:5vh;">
         <form class="form-horizontal" action="/register" method="POST">
           <div class="form-group row">
-            <label class="col-form-label  text-left">信箱：</label>
-            <input type="email" name="email" class="form-control" v-model="email">
+            <label class="col-form-label  col-sm-2">信箱</label>
+            <div class="col-sm-10">
+                <input type="email" name="email" class="form-control" v-model="email" placeholder="常用信箱">
+            </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label text-left">密碼：</label>
-            <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password">
+            <label class="col-form-label col-sm-2">密碼</label>
+            <div class="col-sm-10">
+              <input type="password" name="password" pattern="[\w]+" class="form-control" v-model="password" placeholder="密碼">
+            </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label  text-left">暱稱：</label>
-            <input type="text" name="nickname" class="form-control" v-model="nickname">
+            <label class="col-form-label  col-sm-2">暱稱</label>
+            <div class="col-sm-10">
+              <input type="text" name="nickname" class="form-control" v-model="nickname" placeholder="其他人將會看見你的暱稱">
+            </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label  text-left">姓氏：</label>
-            <input type="text" name="lastname" class="form-control" v-model="lastname">
+            <label class="col-form-label  col-sm-2">姓氏</label>
+            <div class="col-sm-10">
+              <input type="text" name="lastname" class="form-control" v-model="lastname" placeholder="姓氏 / Last name">
+            </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label  text-left">名字：</label>
-            <input type="text" name="firstname" class="form-control" v-model="firstname">
+            <label class="col-form-label  col-sm-2">名字</label>
+            <div class="col-sm-10">
+              <input type="text" name="firstname" class="form-control" v-model="firstname" placeholder="名字 / First name">
+            </div>
           </div>
           <div class="text-center">
-            <button type="submit">註冊</button>
+            <button class="btn btn-info" type="submit">註冊</button>
           </div>
         </form>
+        </div>
+
       </div>
     </script>
     <script type="text/x-template" id="card_content">
       <div>
-        <div class="card text-center" style='overflow:hidden' >
+        <div class="card text-center" style='overflow:hidden;' >
         <br></br>
            <img class="card-img-top" :src="photo" style="width:20rem;display:block; margin:auto;">
          <div class="card-body">
@@ -126,7 +149,7 @@
                 }
             },
             deactivated() {
-                this.password = ''; 
+                this.password = '';
             }
         });
 
@@ -154,15 +177,15 @@
                 path: 'login'
             },
             methods: {
-                goPath: function(path) {
+                goPath: function (path) {
                     this.path = path;
                     bus.$emit('updateView', path);
-                    window.history.pushState({path: path}, "", path);
+                    window.history.pushState({ path: path }, "", path);
                 }
             }
         })
 
-        window.onpopstate = function(event) {
+        window.onpopstate = function (event) {
             if (event.state && event.state.path) {
                 bus.$emit('updateView', event.state.path);
             } else { // event.state == null
@@ -177,7 +200,7 @@
             },
             created() {
                 let self = this;
-                bus.$on('updateView', function(path) {
+                bus.$on('updateView', function (path) {
                     self.view = path + "View";
                 })
             }
@@ -185,36 +208,36 @@
     </script>
 
     <script>
-      Vue.component('card_content', {
-          template: '#card_content',
-          data: function() {
-              return {
-                  name:'學妹',   
-                  photo: 'http://img1.gtimg.com/6/636/63659/6365986_550x550_0.jpg',
-                  voice:'',
-                  playerMsg: "Play"
-              }
-          },
-          methods: {
-              playOrStop: function() {
-                  let voice = document.getElementById("voice");
-                  if (this.playerMsg == "Play") {
-                      this.playerMsg = "Stop";
-                      voice.play();
-                  } else {
-                      this.playerMsg = "Play";
-                      voice.pause();
-                      voice.currentTime = 0;
-                  }
-              },
-              handleEnded: function() {
-                  this.playerMsg = "Play";
-              }
-          }
-      })
-    new Vue({el:"#card"});
+        Vue.component('card_content', {
+            template: '#card_content',
+            data: function () {
+                return {
+                    name: 'Mica',
+                    photo: '/img/home.png',
+                    voice: '',
+                    playerMsg: "Play"
+                }
+            },
+            methods: {
+                playOrStop: function () {
+                    let voice = document.getElementById("voice");
+                    if (this.playerMsg == "Play") {
+                        this.playerMsg = "Stop";
+                        voice.play();
+                    } else {
+                        this.playerMsg = "Play";
+                        voice.pause();
+                        voice.currentTime = 0;
+                    }
+                },
+                handleEnded: function () {
+                    this.playerMsg = "Play";
+                }
+            }
+        })
+        new Vue({ el: "#card" });
     </script>
-  <script type="text/javascript" src="card/card.js"></script>
+    <script type="text/javascript" src="card/card.js"></script>
 </body>
 
 </html>
