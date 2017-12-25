@@ -1,4 +1,4 @@
-<!doctype html>
+<! doctype html>
 <html lang="en" style='margin:0'>
 
 <head>
@@ -30,7 +30,9 @@
           <span class="navbar-toggler-icon"></span>
         </button>
       </div>
-      <img :src='photo' :style='styleimg'>
+      <div style="padding-top:3vh;">
+        <img :src='photo' :style='styleimg'>
+      </div>
       <div class="collapse navbar-collapse " id="navbarNav">
         <ul class="navbar-nav flex-column ">
           <li class="nav-item" v-for='i in List'>
@@ -96,7 +98,7 @@
     </script>
 
   <script type="text/x-template" id="edit">
-        <div class="container">
+        <div class="container" style="padding-top:5vh;">
           <div class="text-center">
             <h1>編輯個人檔案</h1>
             <form action="/photo" method="post" enctype="multipart/form-data">
