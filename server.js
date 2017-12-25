@@ -675,3 +675,13 @@ schedule.scheduleJob("*/5 * * * *", function switchToNextDay() {
     console.log("dailyCardSwitch: ", dailyCardSwitch);
     dailyCardSwitch = !dailyCardSwitch;
 })
+
+app.get('/weather',(req,res)=>{
+ consloe.log(`get skycode`)
+ weather.find({search: 'T’ainan, TWN', degreeType: 'C'}, function(err, result) {
+   if(err) console.log(err);
+   
+    res.send(result[0].current.skycode);
+});
+
+})
