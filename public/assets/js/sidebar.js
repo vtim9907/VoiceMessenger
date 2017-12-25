@@ -8,7 +8,7 @@ var sidebar=new Vue({
        display:'flex',
        height:'100vh',
        width:'250px',
-       paddind:'0'
+       padding:'0',
      },
 
      styleimg:{

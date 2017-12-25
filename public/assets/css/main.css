@@ -11,3 +11,53 @@
   transform: translateX(10px);
   opacity: 0;
 }
+
+.navbar-dark{
+  background-color:rgb(28, 38, 51);
+}
+#weatherGrid{
+  overflow:hidden;
+  position:fixed;
+  perspective:400;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  z-index:-1;
+  background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.28, rgb(69,132,180)), color-stop(0.64, rgb(31,71,120)) );
+  
+}
+#sky{
+  top: 25vh;
+  height: 50vh;
+  left: 20vw;
+  width: 60vw;
+  position: absolute;
+  transform-style: preserve-3d;
+/*z-index:0;*/
+}
+
+.cloudBase {
+    height: 20px;
+    left: 256px;
+    margin-left: -10px;
+    margin-top: -10px;
+    position: absolute;
+    top: 256px;
+    width: 20px;
+}
+          
+.cloudLayer {
+    height: 256px;
+    left: 50%;
+    margin-left: -128px;
+    margin-top: -128px;
+    position: absolute;
+    top: 50%;
+    width: 256px;
+    background-image:url('../grid/cloud.png ');
+    -webkit-transition: opacity .5s ease-out;
+    -moz-transition: opacity .5s ease-out;
+    -o-transition: opacity .5s ease-out;
+    transition: opacity .5s ease-out;
+}
