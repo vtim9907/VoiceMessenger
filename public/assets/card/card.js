@@ -83,4 +83,4 @@ Vue.component('card-content', {
             this.playerMsg = "Play";
         }
     }
-})
+});

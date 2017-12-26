@@ -12,6 +12,7 @@
   <link href="css/main.css" rel="stylesheet">
   <link href="chat/chat.css" rel="stylesheet">
   <link href="card/loading.css" rel="stylesheet">
+  <link href="forum/forum.css" rel="stylesheet">
   <link rel="manifest" href="./manifest.json">
   <script type="text/javascript" src="js/Vue.js"></script>
   <script type="text/javascript" src="js/lame.all.js"></script>
@@ -226,7 +227,31 @@
   </script>
 
   <script type="text/x-template" id="forum">
-    <h1>HI!</h1>
+    <div id="forum_container">
+      <keep-alive>
+        <component :is="currentView"></component>
+      </keep-alive>
+    </div>
+  </script>
+
+  <script type="text/x-template" id="forum_content">
+    <div class="container">
+      <div class="col-12" style="border: black 1px;">
+        <div class="forum_list">
+            <span class="list-group-item post-entry">First item</span>
+            <span class="list-group-item">First item</span>
+        <div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-template" id="forum_loading">
+    <div class="sk-folding-cube">
+      <div class="sk-cube1 sk-cube"></div>
+      <div class="sk-cube2 sk-cube"></div>
+      <div class="sk-cube4 sk-cube"></div>
+      <div class="sk-cube3 sk-cube"></div>
+    </div>
   </script>
 
     <script type="text/x-template" id="chat">
