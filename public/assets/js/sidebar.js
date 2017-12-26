@@ -15,7 +15,7 @@ var sidebar=new Vue({
        width:'10rem',
        display:'',
      },
-     List:["編輯資料","好友","聊天","抽卡","錄音"],
+     List:["編輯資料","好友","聊天","論壇","抽卡","錄音"],
      photo:'https://goo.gl/eKdiuU'
 
 

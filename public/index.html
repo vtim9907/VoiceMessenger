@@ -61,6 +61,10 @@
       <chat></chat>
     </div>
 
+    <div v-if="Pageshown=='論壇'">
+        <forum></forum>
+    </div>
+
     <div v-if="Pageshown=='抽卡'">
       <card></card>
     </div>
@@ -221,6 +225,10 @@
     </div>
   </script>
 
+  <script type="text/x-template" id="forum">
+    <h1>HI!</h1>
+  </script>
+
     <script type="text/x-template" id="chat">
       <div class="container" style='padding:16px'>
         <div class="text-center" v-if="not_found">
@@ -266,6 +274,7 @@
   <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
   <script type="text/javascript" src="js/record.js"></script>
   <script type="text/javascript" src="card/card.js"></script>
+  <script type="text/javascript" src="forum/forum.js"></script>
   <script type="text/javascript" src="grid/grid.js"></script>
   <script type="text/javascript" src="chat/chat.js"></script>
   <script type="text/javascript" src="friends/friends.js"></script>
