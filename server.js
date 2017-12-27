@@ -506,6 +506,29 @@ app.post('/getProfile', checkAuthentication, function (req, res) {
     })
 })
 
+app.post('/new_post', checkAuthentication, function (req, res) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function (user) {
+        if (!req.body.content) {
+            res.json({});
+            // throw error;
+        }
+        return models.Post.create({
+            content: req.body.content,
+            who: user.email
+        })
+    }).then(function() {
+        console.log("receive post successfully");
+        res.json({});
+    }).catch(function(e) {
+        console.log(e);
+        res.json({});
+    })
+});
+
 //missing routing handle
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

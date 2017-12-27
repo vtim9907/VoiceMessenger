@@ -75,9 +75,9 @@
       <record></record>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog">
-      <div class="modal-dialog modal-lg">
+    <!-- Modal for new post -->
+    <div class="modal fade" id="new_post" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
       
           <!-- Modal content-->
           <div class="modal-content post-publish-area">
@@ -86,11 +86,11 @@
               <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
           </div>
           <div class="modal-body">
-              <textarea class="form-control post-textarea" rows="5" id="comment" placeholder="在想些什麼？" maxlength="200"></textarea>
+              <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content"></textarea>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-primary">PO文</button>
+              <button type="button" class="btn btn-primary" id="send_post">PO文</button>
           </div>
           </div>
           
@@ -258,9 +258,9 @@
   <script type="text/x-template" id="forum_content">
     <div class="container">
       <div class="col-12" style="border: black 1px;">
-        <button type="button" class="btn btn-primary btn-md container forum-goto-post" onclick="$('#myModal').modal();">發表文章</button>
+        <button type="button" class="btn btn-primary btn-md container forum-goto-post" onclick="$('#new_post').modal('toggle');">發表文章</button>
         <div class="forum-list">
-            <!-- <span class="list-group-item post-entry" onclick="$('#myModal').modal();">First item</span> -->
+            <!-- <span class="list-group-item post-entry" onclick="$('#new_post').modal();">First item</span> -->
             <div class="row post-entry list-group-item">
                 <span class="col-1">
                 <img src="https://goo.gl/eKdiuU" class="post-entry-image col-1 align-middle">
@@ -329,6 +329,7 @@
   <script type="text/javascript" src="js/record.js"></script>
   <script type="text/javascript" src="card/card.js"></script>
   <script type="text/javascript" src="forum/forum.js"></script>
+  <script type="text/javascript" src="forum/new_post.js"></script>
   <script type="text/javascript" src="grid/grid.js"></script>
   <script type="text/javascript" src="chat/chat.js"></script>
   <script type="text/javascript" src="friends/friends.js"></script>
