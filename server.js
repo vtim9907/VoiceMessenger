@@ -192,7 +192,9 @@ if (config.email) {
                 },
                 defaults: {
                     password: req.body.password,
-                    nickname: req.body.nickname
+                    nickname: req.body.nickname,
+                    gender: req.body.gender,
+                    age: req.body.age
                 }
             }).spread(function (user, created) {
                 if (user) {
@@ -279,21 +281,55 @@ app.post('/mp3', mp3.single('mp3'), function (req, res) {
 
 //photo
 var uploadPhoto = multer({ dest: 'photo/' });
-app.post('/photo', uploadPhoto.single('myphoto'), function (req, res) {
+app.post('/editProfile',  uploadPhoto.single('myphoto'), function (req, res) {
     models.User.findOne({
         where: {
             id: req.session.passport.user
         }
     }).then(function (user) {
-        if (user.createOrModifyPhotoPath(req.file.filename)) {
-            return res.redirect('/');
+        if (req.file) {
+            if (user.createOrModifyPhotoPath(req.file.filename)) {
+                console.log("modify path OK.");
+                return user;
+            } else {
+                console.log("something wrong when update photo path");
+                return user;
+            }
+        } else {
+            return user;
         }
-        return res.send('an error occurred!');
+    }).then(function (user) {
+        user.update({
+            nickname: req.body.nickname,
+            gender: req.body.gender,
+            age: req.body.age
+        }).then(function (result) {
+            console.log("update profile successfully");
+            return res.redirect('/');
+        }).catch(function (err) {
+            logger.error(err);
+            return res.redirect('/');
+        });
     }).catch(function (err) {
         logger.error(err);
-        return done(err);
+        return res.redirect('/');
     });
 })
+// app.post('/editProfile', uploadPhoto.single('myphoto'), function (req, res) {
+//     models.User.findOne({
+//         where: {
+//             id: req.session.passport.user
+//         }
+//     }).then(function (user) {
+//         if (user.createOrModifyPhotoPath(req.file.filename)) {
+//             return res.redirect('/');
+//         }
+//         return res.send('an error occurred!');
+//     }).catch(function (err) {
+//         logger.error(err);
+//         return done(err);
+//     });
+// })
 
 app.get('/getPhoto', checkAuthentication, function (req, res, next) {
     models.User.findOne({
@@ -431,7 +467,9 @@ app.post('/card', checkAuthentication, function (req, res) {
             status: CARD_SUCCESS,
             name: user.nickname,
             photo: user.photoPath,
-            voice: user.voicePath
+            voice: user.voicePath,
+            gender: user.gender,
+            age: user.age
         });
     }).catch(function (status) {
         switch (status) {
@@ -445,6 +483,26 @@ app.post('/card', checkAuthentication, function (req, res) {
             default:
                 res.sendStatus(403);
         }
+    })
+})
+
+//get profile
+app.post('/getProfile', checkAuthentication, function (req, res) {
+    models.User.findOne({
+        where: {
+            id: req.session.passport.user
+        }
+    }).then(function sendRequest(user) {
+        res.json({
+            name: user.nickname,
+            photo: user.photoPath,
+            // voice: user.voicePath,
+            gender: user.gender,
+            age: user.age
+        });
+    }).catch(function (err) {
+        logger.error(err);
+        return done(err);
     })
 })
 
