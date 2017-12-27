@@ -5,7 +5,7 @@
   <title>index</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script> 
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
     crossorigin="anonymous">
@@ -23,9 +23,11 @@
   <div class='wrapper'>
     <nav class="navbar navbar-expand-md flex-column navbar-dark" :style='styleObject' id='sidebar'>
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="img/logo-voiceMessage.png" alt="" class="d-inline-block align-top">
-        </a>
+        <div class="container" style="padding-top:1vh;">
+          <a class="navbar-brand" href="#">
+            <img src="img/logo-voiceMessage.png" alt="" class="d-inline-block align-top">
+          </a>
+        </div>
         <button class="navbar-toggler justify-content-end" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
           aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -70,9 +72,9 @@
 
   </div>:
 
-  <div id='weatherGrid' >        
-     <div id="sky"></div> 
-  </div>       
+  <div id='weatherGrid'>
+    <div id="sky"></div>
+  </div>
 
   <script type="text/x-template" id="record">
     <div class="row justify-content-center">
@@ -104,11 +106,56 @@
 
   <script type="text/x-template" id="edit">
         <div class="container" style="padding-top:5vh;">
-          <div class="text-center">
-            <h1>編輯個人檔案</h1>
-            <form action="/photo" method="post" enctype="multipart/form-data">
-              <p>更換大頭照</p>
-              <input type="file" accept="image/*" name="myphoto" >
+          <div class="text-center editForm"  style="border-radius: 15px; padding:15px;">
+            <h1>編輯個人檔案</h1><hr /><br>
+            <form id="register" action="/editProfile" method="post" enctype="multipart/form-data">
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">暱稱</label>
+                <div class="col-sm-4">
+                  <input type="text" name="nickname" class="form-control" v-model="name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">性別</label>
+                <div class="col-sm-2">
+                  <div v-if="gender==0">
+                  <select name="gender" form="register" class="form-control">
+                    <option value="0" selected="selected">保密</option>
+                    <option value="1">男</option>
+                    <option value="2">女</option>
+                  </select>
+                  </div>
+                  <div v-if="gender==1">
+                  <select name="gender" form="register" class="form-control">
+                    <option value="0">保密</option>
+                    <option value="1" selected="selected">男</option>
+                    <option value="2">女</option>
+                  </select>
+                  </div>
+                  <div v-if="gender==2">
+                  <select name="gender" form="register" class="form-control">
+                    <option value="0">保密</option>
+                    <option value="1">男</option>
+                    <option value="2" selected="selected">女</option>
+                  </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">年齡</label>
+                <div class="col-sm-1">
+                  <input type="number" name="age" class="form-control" min="1" step="1" v-model="age">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">更換大頭照</label>
+                <div class="col-sm-4 text-left">
+                  <label class="custom-file">
+                    <input type="file"  class="custom-file-input" accept="image/*" name="myphoto" onchange="$(this).next().after().text($(this).val().split('\\').slice(-1)[0])">
+                    <span class="custom-file-control"></span>
+                  </label>
+                </div>
+              </div>
               <br><br>
               <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
             </form> 
@@ -200,7 +247,7 @@
       </div>
     </script> -->
 
-    <script type="text/x-template" id="chat">
+  <script type="text/x-template" id="chat">
       <div class="container h-100" style='padding:16px'>
         <div class="text-center" v-if="not_found">
           <div class="container">
@@ -241,7 +288,7 @@
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
     crossorigin="anonymous"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> 
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
   <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
   <script type="text/javascript" src="js/record.js"></script>
   <script type="text/javascript" src="card/card.js"></script>

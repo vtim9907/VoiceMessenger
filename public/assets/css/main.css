@@ -61,3 +61,7 @@
     -o-transition: opacity .5s ease-out;
     transition: opacity .5s ease-out;
 }
+
+.editForm {
+  background-color: rgba(221, 221, 221, 0.726);
+}
