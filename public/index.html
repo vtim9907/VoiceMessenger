@@ -75,7 +75,28 @@
       <record></record>
     </div>
 
-  </div>:
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog modal-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content post-publish-area">
+          <div class="modal-header">
+              <h4 class="modal-title">發表文章</h4>
+              <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+              <textarea class="form-control post-textarea" rows="5" id="comment" placeholder="在想些什麼？" maxlength="200"></textarea>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary">PO文</button>
+          </div>
+          </div>
+          
+      </div>
+    </div>
+  </div>
 
   <div id='weatherGrid'>
     <div id="sky"></div>
@@ -237,9 +258,17 @@
   <script type="text/x-template" id="forum_content">
     <div class="container">
       <div class="col-12" style="border: black 1px;">
-        <div class="forum_list">
-            <span class="list-group-item post-entry">First item</span>
-            <span class="list-group-item">First item</span>
+        <button type="button" class="btn btn-primary btn-md container forum-goto-post" onclick="$('#myModal').modal();">發表文章</button>
+        <div class="forum-list">
+            <!-- <span class="list-group-item post-entry" onclick="$('#myModal').modal();">First item</span> -->
+            <div class="row post-entry list-group-item">
+                <span class="col-1">
+                <img src="https://goo.gl/eKdiuU" class="post-entry-image col-1 align-middle">
+                </span>
+                <span class="col-11">
+                    <a>HELLO WORLD!</a>
+                </span>
+            </div>
         <div>
       </div>
     </div>

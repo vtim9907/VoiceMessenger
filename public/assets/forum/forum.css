@@ -6,13 +6,44 @@
     width: 100%;
 }
 
-.forum_list {
+.forum-list {
     height: 80vh;
     overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.post-entry-image-container {
+
+}
+
+.forum-goto-post {
+    cursor: pointer;
+}
+
+.post-entry-image {
+    max-height: 50px;
+    position: center;
 }
 
 .post-entry:hover{
     background-color: grey;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.post-cancel {
+    color: grey;
+}
+
+.post-cancel:hover {
+    filter: invert(100%);
+}
+
+.post-publish-area {
+    background-color: white;
+    color: black;
+}
+
+.post-textarea {
+    border: solid 0px black;
 }
