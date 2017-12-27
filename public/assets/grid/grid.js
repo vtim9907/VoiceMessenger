@@ -108,32 +108,9 @@ function createCloud() {
  
   return div;
 }
-function update (){      
-    for( var j = 0; j < layers.length; j++ ) {
-       var layer = layers[ j ];
-       layer.data.a += layer.data.speed;
-       var t = 'translateX( ' + layer.data.x + 'px )\
-               translateY( ' + layer.data.y + 'px )\
-               translateZ( ' + layer.data.z + 'px )\
-               rotateY( ' + ( - worldYAngle ) + 'deg )\
-               rotateX( ' + ( - worldXAngle ) + 'deg )\
-               scale( ' + layer.data.s + ')';
-         layer.style.webkitTransform =t;
-         layer.style.MozTransform =t;
-         layer.style.oTransform =t;
-         layer.style.transform = t;
-   }
-    requestAnimationFrame( update );
-
-}
 
 $(document).ready(function(){
     generate();
-window.addEventListener( 'mousemove',function( e ) {
-    worldYAngle = -( .5 - ( e.clientX / window.innerWidth ) ) * 50;
-    worldXAngle = ( .5 - ( e.clientY / window.innerHeight ) ) * 50;
-    update();
-} );
 });
 
 
