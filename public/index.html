@@ -13,6 +13,7 @@
   <link href="chat/chat.css" rel="stylesheet">
   <link href="card/loading.css" rel="stylesheet">
   <link href="forum/forum.css" rel="stylesheet">
+  <link href="qa/qa.css" rel="stylesheet">
   <link rel="manifest" href="./manifest.json">
   <script type="text/javascript" src="js/Vue.js"></script>
   <script type="text/javascript" src="js/lame.all.js"></script>
@@ -63,13 +64,16 @@
     </div>
 
     <div v-if="Pageshown=='論壇'">
-        <forum></forum>
+      <forum></forum>
     </div>
 
     <div v-if="Pageshown=='抽卡'">
       <card></card>
     </div>
 
+    <div v-if="Pageshown=='說明'">
+      <qa></qa>
+    </div>
 
     <div v-if="Pageshown=='錄音'">
       <record></record>
@@ -315,9 +319,92 @@
         </div>
       </div>
     </script>
+    <script type="text/x-template" id="edit">
+        <div class="container" style="padding-top:5vh;">
+          <div class="text-center editForm"  style="border-radius: 15px; padding:15px;">
+            <h1>編輯個人檔案</h1><hr /><br>
+            <form id="register" action="/editProfile" method="post" enctype="multipart/form-data">
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">暱稱</label>
+                <div class="col-sm-4">
+                  <input type="text" name="nickname" class="form-control" v-model="name">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">性別</label>
+                <div class="col-sm-2">
+                  <div v-if="gender==0">
+                  <select name="gender" form="register" class="form-control">
+                    <option value="0" selected="selected">保密</option>
+                    <option value="1">男</option>
+                    <option value="2">女</option>
+                  </select>
+                  </div>
+                  <div v-if="gender==1">
+                  <select name="gender" form="register" class="form-control">
+                    <option value="0">保密</option>
+                    <option value="1" selected="selected">男</option>
+                    <option value="2">女</option>
+                  </select>
+                  </div>
+                  <div v-if="gender==2">
+                  <select name="gender" form="register" class="form-control">
+                    <option value="0">保密</option>
+                    <option value="1">男</option>
+                    <option value="2" selected="selected">女</option>
+                  </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">年齡</label>
+                <div class="col-sm-1">
+                  <input type="number" name="age" class="form-control" min="1" step="1" v-model="age">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label  col-sm-2">更換大頭照</label>
+                <div class="col-sm-4 text-left">
+                  <label class="custom-file">
+                    <input type="file"  class="custom-file-input" accept="image/*" name="myphoto" onchange="$(this).next().after().text($(this).val().split('\\').slice(-1)[0])">
+                    <span class="custom-file-control"></span>
+                  </label>
+                </div>
+              </div>
+              <br><br>
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button> 
+            </form> 
+          </div>
+        </div>
+    </script>
+    <script type="text/x-template" id="qa">
+      <div class="container" style="padding:5vh 0 5vh 0;">
+        <div class="text-center frame" >
+          <h1>VoiceMessenger是什麼?</h1>
+          <p>交友軟體有千百款，但通常交友的依據都只是冰冷的文字介紹。</p>
+          <p>VoiceMessenger以錄音的方式取代文字介紹，你可以不必擔心與他人尷尬對話，也可以透過聲音介紹以及認識他人!</p>
+        </div>
+        <div class="text-center frame">
+          <h1>為什麼我不能抽卡?</h1>
+          <p>請先確認自己已經完成錄音。</p>
+          <p>趕快完成自己的錄音自介才能讓別人認識你!</p>
+        </div>
+        <div class="text-center frame">
+          <h1>為什麼我送出了邀請還沒有成為好友?</h1>
+          <p>只有當你主動送出邀請，而對方也有送出邀請的情況下，才會成為好友。</p>
+          <p>趕快掌握自己的緣分，勇敢的送出邀請!!</p>
+        </div>
+        <div class="text-center frame">
+          <h1>如何在VoiceMessenger上註冊新帳號?</h1>
+          <p>進入VoiceMessenger首頁點選註冊，</p>
+          <p>輸入常用信箱以及密碼後，即可完成註冊。</p>
+        </div>
+      </div>
+    </script>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
@@ -336,7 +423,8 @@
   <script type="text/javascript" src="edit/edit.js"></script>
   <script type='text/javascript' src='js/sidebar.js'></script>
   <script type="text/javascript" src="js/register.js"></script>
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="qa/qa.js"></script>
+
 </body>
 
 </html>
