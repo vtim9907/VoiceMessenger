@@ -21,6 +21,7 @@ var validator = require('validator');
 var schedule = require('node-schedule');
 var shuffle = require('shuffle-array');
 var io = require('socket.io');
+var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 //core
 var models = require('./lib/models');
@@ -540,6 +541,8 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.send(err.status + " " + err.message)
 });
+
+app.use('/peer', ExpressPeerServer(server, {debug: true}));
 
 //listen
 function startListen() {

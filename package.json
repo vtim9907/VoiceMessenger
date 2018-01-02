@@ -36,6 +36,7 @@
     "node-schedule": "^1.2.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "peer": "^0.2.8",
     "randomcolor": "^0.5.3",
     "scrypt": "^6.0.3",
     "sequelize": "^4.22.8",

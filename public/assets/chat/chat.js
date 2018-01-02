@@ -10,7 +10,9 @@ var chat = Vue.extend({
             user: '',
             inter: {},
             socket: undefined,
-            not_found: true
+            not_found: true,
+            peer: undefined,
+            stream: undefined
         }
     },
     methods: {
@@ -46,9 +48,40 @@ var chat = Vue.extend({
             $.get('chatMsg', { to: self.user }, function (data) {
                 self.content = data.content;
             });
+        },
+        voice: function(){
+            var self = this;
+            console.log("voice test");
+            console.log(this.myName);
+            navigator.getUserMedia = navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+
+            navigator.getUserMedia({
+                video: false,
+                audio: true
+            },function(stream){
+                self.peer.call(self.user,stream);
+            },function(error){
+                console.log(error);
+            });
+        },
+        createStream: function(){
+            /*
+            var self = this;
+            navigator.getUserMedia = navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+
+            navigator.getUserMedia({
+                video: true,
+                audio: true
+            },function(stream){
+                self.stream = stream;
+            });
+            */
         }
     },
     created: function () {
+        console.log('cookie: ' + document.cookie);
         var self = this;
         /*
         $.get('userList',function(data){
@@ -85,6 +118,27 @@ var chat = Vue.extend({
         });
         $.get('givename', function (userName) {
             myName = userName;
+            self.peer = new Peer(userName, { host: 'localhost', port: 9907, secure: true, path: '/peer', debug: 3 });
+            self.peer.on('open', function(id){
+                console.log('peer id: ' + id);
+            });
+            self.peer.on('call', function(call){
+                navigator.getUserMedia = navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
+
+                navigator.getUserMedia({
+                    video: false,
+                    audio: true
+                },function(stream){
+                    call.answer(stream);
+                    call.on('stream',function(stream){
+                        var video = document.getElementById('videoTest');
+                        video.src = window.URL.createObjectURL(stream);
+                    });
+                },function(error){
+                    console.log(error);
+                });
+            });
         });
         //this.user = this.userList[0];
         /*
@@ -105,6 +159,7 @@ var chat = Vue.extend({
             self.myName = myName;
             self.content = data.content;
         });
+        
     },
     deactivated: function () {
         //clearInterval(this.inter);
@@ -112,6 +167,8 @@ var chat = Vue.extend({
     destroyed: function () {
         console.log('destroyed');
         this.socket.disconnect();
+        this.peer.disconnect();
+        this.peer.destroy();
     }
 });
 

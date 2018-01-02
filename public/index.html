@@ -1,4 +1,4 @@
-<! doctype html>
+<!doctype html>
 <html lang="en" style='margin:0'>
 
 <head>
@@ -19,6 +19,7 @@
   <script type="text/javascript" src="js/lame.all.js"></script>
   <script type="text/javascript" src="js/RecordRTC.js"></script>
   <script type="text/javascript" src="./service_worker.js"></script>
+  <script type="text/javascript" src="js/peer.js"></script>
 </head>
 
 <body onresize='responsive()' class='bd-drak'>
@@ -314,6 +315,10 @@
               </ul>
               <br>
               <textarea id="chatTextarea" name='test' class="w-100" rows="4" @keydown.enter.prevent="send" placeholder="請輸入訊息..."></textarea>
+            </div>
+            <div>
+              <audio id="videoTest" autoplay></audio>
+              <button @click="voice">voice chat</button>
             </div>
           </div>
         </div>
