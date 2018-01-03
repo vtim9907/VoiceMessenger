@@ -1,0 +1,12 @@
+.frame {
+  border-radius:15px;
+  padding:15px;
+  margin:15px;
+  background-color: #E6E7E6;
+}
+.frame h1 {
+  font-weight:900;
+}
+.frame p {
+  font-size:18px;
+}
