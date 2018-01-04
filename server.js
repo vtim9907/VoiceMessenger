@@ -282,12 +282,12 @@ app.post('/mp3', mp3.single('mp3'), function (req, res) {
 
 //photo
 var uploadPhoto = multer({ dest: 'photo/' });
-app.post('/editProfile',  uploadPhoto.single('myphoto'), function (req, res) {
+app.post('/editProfile',  /* uploadPhoto.single('myphoto'), */function (req, res) {
     models.User.findOne({
         where: {
             id: req.session.passport.user
         }
-    }).then(function (user) {
+    })/*.then(function (user) {
         if (req.file) {
             if (user.createOrModifyPhotoPath(req.file.filename)) {
                 console.log("modify path OK.");
@@ -299,7 +299,7 @@ app.post('/editProfile',  uploadPhoto.single('myphoto'), function (req, res) {
         } else {
             return user;
         }
-    }).then(function (user) {
+    })*/.then(function (user) {
         user.update({
             nickname: req.body.nickname,
             gender: req.body.gender,
