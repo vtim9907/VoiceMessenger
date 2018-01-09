@@ -519,8 +519,9 @@ app.post('/new_post', checkAuthentication, function (req, res) {
         }
         return models.Post.create({
             content: req.body.content,
-            who: user.email
-        })
+        }).then(function(post) {
+            post.setAuthor(user);
+        });
     }).then(function() {
         console.log("receive post successfully");
         res.json({});

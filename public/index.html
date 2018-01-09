@@ -80,25 +80,24 @@
       <record></record>
     </div>
 
-    <!-- Modal for new post -->
-    <div class="modal fade" id="new_post" role="dialog">
-      <div class="modal-dialog modal-lg" role="document">
-      
-          <!-- Modal content-->
-          <div class="modal-content post-publish-area">
-          <div class="modal-header">
-              <h4 class="modal-title">發表文章</h4>
-              <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-              <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content"></textarea>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-              <button type="button" class="btn btn-primary" id="send_post">PO文</button>
-          </div>
-          </div>
-          
+  </div>
+
+  <!-- Modal for new post -->
+  <div class="modal fade" id="new_post" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <!-- Modal content-->
+      <div class="modal-content post-publish-area">
+        <div class="modal-header">
+            <h4 class="modal-title">發表文章</h4>
+            <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content" v-model="content"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary" id="send_post" @click="sub">PO文</button>
+        </div>
       </div>
     </div>
   </div>
