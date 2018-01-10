@@ -2,7 +2,7 @@ var friends = Vue.extend({
   template: "#friends",
   data: function () {
     return {
-      not_found: false,
+      not_found: true,
       lists: []
       // lists: [{ nickname: 'nickname1', photoPath: 'https://goo.gl/eKdiuU' },
       // { nickname: 'nickname2', photoPath: 'https://goo.gl/eKdiuU' },
