@@ -531,6 +531,16 @@ app.post('/new_post', checkAuthentication, function (req, res) {
     })
 });
 
+app.post('/get_posts', checkAuthentication, function(req, res) {
+    console.log("-----getposts-----")
+    models.Post.findAll({}).then(function(posts){
+        if (posts)
+            res.json(posts);
+        else
+            res.json({});
+    })
+})
+
 //missing routing handle
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

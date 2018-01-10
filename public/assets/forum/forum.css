@@ -12,16 +12,12 @@
     overflow-x: hidden;
 }
 
-.post-entry-image-container {
-
-}
-
 .forum-goto-post {
     cursor: pointer;
 }
 
 .post-entry-image {
-    max-height: 50px;
+    max-width: 50px;
     position: center;
 }
 
