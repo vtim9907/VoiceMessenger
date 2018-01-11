@@ -22,17 +22,12 @@
 }
 
 .post-entry:hover{
-    background-color: grey;
-    text-decoration: underline;
+    background-color: rgb(204, 203, 203);
     cursor: pointer;
 }
 
 .post-cancel {
     color: grey;
-}
-
-.post-cancel:hover {
-    filter: invert(100%);
 }
 
 .post-publish-area {
