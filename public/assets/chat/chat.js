@@ -118,7 +118,7 @@ var chat = Vue.extend({
         });
         $.get('givename', function (userName) {
             myName = userName;
-            self.peer = new Peer(userName, { host: 'localhost', port: 9907, secure: true, path: '/peer', debug: 3 });
+            self.peer = new Peer(userName, { host: 'luffy.ee.ncku.edu.tw', port: 9907, secure: true, path: '/peer', debug: 3 });
             self.peer.on('open', function(id){
                 console.log('peer id: ' + id);
             });
