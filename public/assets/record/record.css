@@ -1,4 +1,8 @@
 .recordImg {
     height: 35vw;
     width: 35vw;
+    cursor: pointer;
+}
+.remind {
+    color: rgb(3, 85, 153);
 }
