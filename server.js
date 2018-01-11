@@ -532,10 +532,26 @@ app.post('/new_post', checkAuthentication, function (req, res) {
 });
 
 app.post('/get_posts', checkAuthentication, function(req, res) {
-    console.log("-----getposts-----")
-    models.Post.findAll({}).then(function(posts){
-        if (posts)
+    models.Post.findAll({
+        order: [["date", "DESC"]],
+        include: [
+            {
+                model: models.User,
+                as: "author",
+                attributes: [
+                    ["photoPath", "image"]
+                ],
+                raw: true
+            },
+        ],
+        raw: true
+    }).then(function(posts) {
+        if (posts) {
+            console.log(posts);
+            if (posts[0])
+                console.log(posts[0].author);
             res.json(posts);
+        }
         else
             res.json({});
     })

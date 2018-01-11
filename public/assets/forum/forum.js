@@ -3,13 +3,7 @@ Vue.component('forum', {
     data: function () {
         return {
             currentView: 'forum-loading',
-            posts: [{
-                image: "https://goo.gl/eKdiuU",
-                content: "test1"
-            }, {
-                image: "https://goo.gl/eKdiuU",
-                content: "test2"
-            }]
+            posts: []
         }
     },
     mounted() {
@@ -23,7 +17,7 @@ Vue.component('forum', {
 
             },
             success: function(posts) {
-                self.posts = self.posts.concat(posts);
+                self.posts = posts
                 self.currentView = "forum-content";
             },
 

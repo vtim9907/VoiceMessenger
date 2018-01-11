@@ -267,7 +267,8 @@
           <!-- <span class="list-group-item post-entry" onclick="$('#new_post').modal();">First item</span> -->
           <div class="row post-entry list-group-item" v-for="post in posts" @click="showPost(post)">
               <!-- <span class="col-1"> -->
-              <img :src="post.image" class="post-entry-image align-middle">
+              <img :src="post['author.image']" class="post-entry-image align-middle">
+              <img v-if="!post['author.image']" src="https://goo.gl/eKdiuU" class="post-entry-image align-middle">
               <!-- </span>
               <span class="col-11"> -->
               <a>{{post.content}}</a>
