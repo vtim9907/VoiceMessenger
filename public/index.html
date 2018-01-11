@@ -11,6 +11,7 @@
   <!-- <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css"> -->
   <link href="css/main.css" rel="stylesheet">
   <link href="chat/chat.css" rel="stylesheet">
+  <link href="record/record.css" rel="stylesheet">
   <link href="card/loading.css" rel="stylesheet">
   <link href="forum/forum.css" rel="stylesheet">
   <link href="qa/qa.css" rel="stylesheet">
@@ -122,31 +123,32 @@
   </div>
 
   <script type="text/x-template" id="record">
-    <div class="row justify-content-center">
-      <div class="">
-        <div class="col-12 text-center">click picture to start recording</div>
-        <img class="w-100" src="/img/microphone.png" @click="clicked()">
-      </div>
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">{{message}}</h5>
-            </div>
-            <div class="modal-body">
-              <canvas class="w-100 h-75 border rounded border-primary" id="canvas"></canvas>
-              <audio class="col-8 d-none" :id="i" controls v-for="i in audioList"></audio> 
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal" v-if="showButton">Close</button>
-              <button type="button" class="btn btn-primary" @click="encode()" v-if="showButton">record</button>
-              <button type="button" class="btn btn-primary" @click="play()" v-if="showButton">play</button>
+    <div class="container" style="padding-top:5vh;">
+      <div class="text-center editForm"  style="border-radius: 15px; padding:15px;">
+        <h1>點擊麥克風圖片，即可開始錄音</h1><hr /><br>
+        <img class="recordImg" src="/img/microphone.png" @click="clicked()">
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{message}}</h5>
+              </div>
+              <div class="modal-body">
+                <canvas class="w-100 h-75 border rounded border-primary" id="canvas"></canvas>
+                <audio class="col-8 d-none" :id="i" controls v-for="i in audioList"></audio> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @click="stopRecord()" v-if="stopButton">停止錄音</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" @click="closeRecord()" v-if="showButton">關閉</button>
+                <button type="button" class="btn btn-primary" @click="encode()" v-if="showButton">重錄</button>
+                <button type="button" class="btn btn-primary" @click="play()" v-if="showButton">播放</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div >   
+    </div>
     </script>
 
   <script type="text/x-template" id="edit">
@@ -392,7 +394,7 @@
     crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
   <script src=" https://cdn.jsdelivr.net/npm/vue"></script>
-  <script type="text/javascript" src="js/record.js"></script>
+  <script type="text/javascript" src="record/record.js"></script>
   <script type="text/javascript" src="card/card.js"></script>
   <script type="text/javascript" src="forum/forum.js"></script>
   <script type="text/javascript" src="forum/new_post.js"></script>
