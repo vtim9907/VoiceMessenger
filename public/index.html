@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
     crossorigin="anonymous">
   <!-- <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css"> -->
   <link href="css/main.css" rel="stylesheet">
@@ -104,15 +104,15 @@
       <!-- Modal content-->
       <div class="modal-content post-publish-area">
         <div class="modal-header">
-            <h4 class="modal-title">發表文章</h4>
-            <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">發表文章</h4>
+          <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-            <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content" v-model="content"></textarea>
+          <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content" v-model="content"></textarea>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary" id="send_post" @click="sub">PO文</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="send_post" @click="sub">PO文</button>
         </div>
       </div>
     </div>
@@ -156,6 +156,19 @@
         <div class="container" style="padding-top:5vh;">
           <div class="text-center editForm"  style="border-radius: 15px; padding:15px;">
             <h1>編輯個人檔案</h1><hr /><br>
+            <div v-if="record">
+                <h4>這是你目前的錄音自介，想要重錄可以點選<a href="#" @click="toRecordPage()">這裡</a></h4><br>
+                <audio id="voice" @ended="handleEnded()">
+                    <source :src="voice" type="audio/mpeg">
+                  </audio>
+                  <button type="button" class="btn btn-info btn-lg" @click="playOrStop()">
+                    <i class="fa fa-play" aria-hidden="true"></i> {{playerMsg}}
+                  </button>
+            </div>
+            <div v-else>
+                <h4>你還沒有錄制自我介紹唷！沒有錄製自介是不能參加抽卡交友的，可以點選<a href="#" @click="toRecordPage()">這裡</a>馬上開始錄製！</h4>
+            </div>
+            <br><hr /><br>
             <form id="register" action="/editProfile" method="post" enctype="multipart/form-data">
               <div class="form-group row">
                 <label class="col-form-label  col-sm-2">暱稱</label>
@@ -323,7 +336,7 @@
     </div>
   </script>
 
-    <script type="text/x-template" id="chat">
+  <script type="text/x-template" id="chat">
       <div class="container" style='padding:16px;position:relative;top:20px;background-color:rgba(230,230,230,0.4);border-radius:10px;box-shadow: 5px 5px 10px #222222;'>
         <div class="text-center" v-if="not_found">
           <div class="container">
@@ -359,7 +372,7 @@
         </div>
       </div>
     </script>
-    <script type="text/x-template" id="qa">
+  <script type="text/x-template" id="qa">
       <div class="container" style="padding:5vh 0 5vh 0;">
         <div class="text-center frame" >
           <h1>VoiceMessenger是什麼?</h1>

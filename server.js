@@ -497,7 +497,7 @@ app.post('/getProfile', checkAuthentication, function (req, res) {
         res.json({
             name: user.nickname,
             photo: user.photoPath,
-            // voice: user.voicePath,
+            voice: user.voicePath,
             gender: user.gender,
             age: user.age
         });
