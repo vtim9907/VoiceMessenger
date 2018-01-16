@@ -11,6 +11,7 @@ var card = Vue.extend({
             voice: "#",
             gender: "",
             age: "",
+            profileDone: false,
             currentView: 'card-loading'
         };
     },
@@ -44,14 +45,17 @@ var card = Vue.extend({
                                 self.gender = "";
                         }
                         self.age = data.age;
+                        self.profileDone = true;
                         break;
                     case CARD_NOT_FOUND:
                         // TODO: not found page
                         self.name = '沒有卡片\n幫QQ';
+                        self.profileDone = true;
                         break;
                     case CARD_IMCOMPLETED_DATA:
                         // TODO: imconpleted data page
-                        self.name = "還沒完成資料喔~!"
+                        self.name = "還沒有完成資料，無法參加抽卡喔~!"
+                        self.profileDone = false;
                         break;
                     default:
                 }
@@ -77,7 +81,7 @@ Vue.component('card-loading', {
 
 Vue.component('card-content', {
     template: '#card_content',
-    props: ["name", "photo", "voice", "gender", "age"],
+    props: ["name", "photo", "voice", "gender", "age","profileDone"],
     data: function() {
         return {
             playerMsg: "Play"

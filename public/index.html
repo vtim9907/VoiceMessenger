@@ -234,7 +234,7 @@
   <script type="text/x-template" id="card">
     <div id="card_container">
       <keep-alive>
-        <component :is="currentView" :name="name" :photo="photo" :voice="voice" :gender="gender" :age="age"></component>
+        <component :is="currentView" :name="name" :photo="photo" :voice="voice" :gender="gender" :age="age" :profileDone="profileDone"></component>
       </keep-alive>
     </div>
   </script>
@@ -250,7 +250,7 @@
 
   <script type="text/x-template" id="card_content">
     <div>
-      <div class="card text-center card_body" style="width:20rem;">
+      <div class="card text-center card_body" style="width:20rem;" v-if="profileDone">
         <img class="card-img-top" :src="photo" >
         <img class="card-img-top" src="https://goo.gl/eKdiuU" v-if="!photo">
         <div class="card-body">
@@ -276,6 +276,13 @@
         </div>
         <br><br>
         <a href="/friendRequest" class="btn btn-primary">送出邀請</a>
+      </div>
+      <div class="card text-center card_body" style="width:20rem;"  v-else>
+        <img class="card-img-top" :src="photo" >
+        <img class="card-img-top" src="https://goo.gl/eKdiuU" v-if="!photo">
+        <div class="card-body">
+          <h2 class="card-title">{{name}}</h2>
+        </div>
       </div>
     </div>
   </script>
@@ -401,9 +408,14 @@
   <script type="text/x-template" id="qa">
       <div class="container" style="padding:5vh 0 5vh 0;">
         <div class="text-center frame" >
-          <h1>VoiceMessenger是什麼?</h1>
+          <h1>VoiceMessenger 是什麼?</h1>
           <p>交友軟體有千百款，但通常交友的依據都只是冰冷的文字介紹。</p>
-          <p>VoiceMessenger以錄音的方式取代文字介紹，你可以不必擔心與他人尷尬對話，也可以透過聲音介紹以及認識他人!</p>
+          <p>VoiceMessenger 以錄音的方式取代文字介紹，你可以不必擔心與他人尷尬對話，也可以透過聲音介紹以及認識他人!</p>
+        </div>
+        <div class="text-center frame">
+          <h1>如何在 VoiceMessenger 上如何新增好友呢?</h1>
+          <p>在每隔固定一段時間，系統會派送新的使用者到你的抽卡頁面，</p>
+          <p>你可以依據他的聲音自介或照片等等，決定是否送出好友邀請喔～！</p>
         </div>
         <div class="text-center frame">
           <h1>為什麼我不能抽卡?</h1>
@@ -414,11 +426,6 @@
           <h1>為什麼我送出了邀請還沒有成為好友?</h1>
           <p>只有當你主動送出邀請，而對方也有送出邀請的情況下，才會成為好友。</p>
           <p>趕快掌握自己的緣分，勇敢的送出邀請!!</p>
-        </div>
-        <div class="text-center frame">
-          <h1>如何在VoiceMessenger上註冊新帳號?</h1>
-          <p>進入VoiceMessenger首頁點選註冊，</p>
-          <p>輸入常用信箱以及密碼後，即可完成註冊。</p>
         </div>
       </div>
     </script>
