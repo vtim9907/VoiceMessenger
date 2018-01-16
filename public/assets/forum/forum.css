@@ -21,6 +21,12 @@
     position: center;
 }
 
+.post-entry {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .post-entry:hover{
     background-color: rgb(204, 203, 203);
     cursor: pointer;
@@ -37,4 +43,14 @@
 
 .post-textarea {
     border: solid 0px black;
+}
+
+.post-content-container {
+    min-height: 200px;
+    overflow-y: auto;
+}
+
+.post-content {
+    word-wrap: break-word;
+    white-space: pre-line;
 }
