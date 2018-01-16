@@ -98,25 +98,7 @@
 
   </div>
 
-  <!-- Modal for new post -->
-  <div class="modal fade" id="new_post" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-      <!-- Modal content-->
-      <div class="modal-content post-publish-area">
-        <div class="modal-header">
-          <h4 class="modal-title">發表文章</h4>
-          <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content" v-model="content"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" id="send_post" @click="sub">PO文</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
   <div id='weatherGrid'>
     <div id="sky"></div>
@@ -285,15 +267,34 @@
   <script type="text/x-template" id="forum">
     <div id="forum_container">
       <keep-alive>
-        <component :is="currentView" :posts="posts"></component>
+        <component :is="currentView" :posts="posts" :load="load.bind(this)"></component>
       </keep-alive>
     </div>
   </script>
 
   <script type="text/x-template" id="forum_content">
     <div class="container">
+        <!-- Modal for new post -->
+      <div class="modal fade" id="new_post" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <!-- Modal content-->
+          <div class="modal-content post-publish-area">
+            <div class="modal-header">
+              <h4 class="modal-title">發表文章</h4>
+              <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content" v-model="content"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" id="send_post" @click="sub()">PO文</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="col-12" style="border: black 1px;">
-        <button type="button" class="btn btn-primary btn-md container forum-goto-post" onclick="$('#new_post').modal('toggle');">發表文章</button>
+        <button type="button" class="btn btn-primary btn-md container forum-goto-post" @click="newPost()">發表文章</button>
         <div class="forum-list">
           <!-- <span class="list-group-item post-entry" onclick="$('#new_post').modal();">First item</span> -->
           <div class="row post-entry list-group-item" v-for="post in posts" @click="showPost(post)">
@@ -411,7 +412,6 @@
   <script type="text/javascript" src="record/record.js"></script>
   <script type="text/javascript" src="card/card.js"></script>
   <script type="text/javascript" src="forum/forum.js"></script>
-  <script type="text/javascript" src="forum/new_post.js"></script>
   <script type="text/javascript" src="grid/grid.js"></script>
   <script type="text/javascript" src="chat/chat.js"></script>
   <script type="text/javascript" src="friends/friends.js"></script>

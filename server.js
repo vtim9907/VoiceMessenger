@@ -547,9 +547,6 @@ app.post('/get_posts', checkAuthentication, function(req, res) {
         raw: true
     }).then(function(posts) {
         if (posts) {
-            console.log(posts);
-            if (posts[0])
-                console.log(posts[0].author);
             res.json(posts);
         }
         else
