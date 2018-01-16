@@ -7,8 +7,10 @@ var card = Vue.extend({
     data: function() {
         return {
             name:'王小明',
-            photo: "https://goo.gl/eKdiuU",
+            photo: "",
             voice: "#",
+            gender: "",
+            age: "",
             currentView: 'card-loading'
         };
     },
@@ -28,10 +30,24 @@ var card = Vue.extend({
                         self.name = data.name;
                         self.photo = data.photo;
                         self.voice = data.voice;
+                        switch(data.gender) {
+                            case 0:
+                                self.gender = "保密";
+                                break;
+                            case 1:
+                                self.gender = "男";
+                                break;
+                            case 2:
+                                self.gender = "女";
+                                break;
+                            default:
+                                self.gender = "";
+                        }
+                        self.age = data.age;
                         break;
                     case CARD_NOT_FOUND:
                         // TODO: not found page
-                        self.name = '沒有卡片，幫QQ';
+                        self.name = '沒有卡片\n幫QQ';
                         break;
                     case CARD_IMCOMPLETED_DATA:
                         // TODO: imconpleted data page
@@ -61,7 +77,7 @@ Vue.component('card-loading', {
 
 Vue.component('card-content', {
     template: '#card_content',
-    props: ["name", "photo", "voice"],
+    props: ["name", "photo", "voice", "gender", "age"],
     data: function() {
         return {
             playerMsg: "Play"
