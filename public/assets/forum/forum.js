@@ -43,7 +43,8 @@ Vue.component('forum-content', {
     data: function() {
         return {
             currentPost: {
-                content: ""
+                content: "",
+                path: ""
             },
             content: "",
             preventSendTwice: false,
@@ -63,6 +64,7 @@ Vue.component('forum-content', {
     methods: {
         showPost: function(post) {
             this.currentPost = post;
+            console.log(this.currentPost);
             $('#post_modal').modal('show');
         },
         sub: function() {

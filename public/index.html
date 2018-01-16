@@ -327,6 +327,7 @@
                 </div>
                 <div class="modal-body .post-content-container">
                   <h3 class="post-content">{{currentPost.content}}</h3>
+                  <audio :src="currentPost.path" type="audio/mpeg" controls></audio>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
