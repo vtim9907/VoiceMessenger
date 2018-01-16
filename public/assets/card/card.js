@@ -49,8 +49,8 @@ var card = Vue.extend({
                         break;
                     case CARD_NOT_FOUND:
                         // TODO: not found page
-                        self.name = '沒有卡片\n幫QQ';
-                        self.profileDone = true;
+                        self.name = '還沒有卡片 幫QQ ';
+                        self.profileDone = false;
                         break;
                     case CARD_IMCOMPLETED_DATA:
                         // TODO: imconpleted data page
