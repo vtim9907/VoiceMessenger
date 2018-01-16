@@ -507,7 +507,7 @@ app.post('/getProfile', checkAuthentication, function (req, res) {
     })
 })
 
-app.post('/new_post', checkAuthentication, function (req, res) {
+app.post('/new_post', checkAuthentication, mp3.single('mp3'), function (req, res) {
     models.User.findOne({
         where: {
             id: req.session.passport.user
@@ -519,7 +519,9 @@ app.post('/new_post', checkAuthentication, function (req, res) {
         }
         return models.Post.create({
             content: req.body.content,
+            path: req.file ? '/mp3/' + req.file.filename : null
         }).then(function(post) {
+            console.log(post);
             post.setAuthor(user);
         });
     }).then(function() {

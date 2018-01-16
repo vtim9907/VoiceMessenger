@@ -288,6 +288,14 @@
             </div>
             <div class="modal-body">
               <textarea class="form-control post-textarea" rows="5" placeholder="在想些什麼？" maxlength="200" id="new_post_content" v-model="content"></textarea>
+              <br/>
+              <button type="button" class="btn btn-primary" @click="recordOrStop" v-if="!recorded && !encoding">{{recording ? "停止" : "錄製"}}</button>
+              <button type="button" class="btn" v-if="encoding">處理中...</button>
+              <a v-if="recording">&nbsp;&nbsp;剩餘秒數: {{timer}}</a>
+              <button type="button" class="btn btn-primary" @click="recordOrStop" v-if="recorded">重錄</button>
+              <button type="button" class="btn btn-primary" @click="play" v-if="recorded">播放</button>
+              <a v-if="recorded">&nbsp;&nbsp;已經錄製了 {{length}} 秒</a>
+              <audio class="d-none" id="postRecord" controls></audio> 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

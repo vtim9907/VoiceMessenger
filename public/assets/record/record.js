@@ -19,6 +19,19 @@ var record = Vue.extend({
 			navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(this.handleSuccess);
 		},
 		handleSuccess: function (stream) {
+            let self = this;
+            this.inter = setInterval(function () {
+				self.recTime += 1;
+				blockRecord -= 1;
+				self.message = 'recording - 剩餘秒數 ' + blockRecord;
+				if (self.recTime >= 30) {
+					clearInterval(self.inter);
+					console.log("stop");
+					self.stop();
+					console.log(self.recordRTC.blob);
+					self.message = 'record finished';
+				}
+			}, 1000);
 			var recordRTC = RecordRTC(stream, {
 				type: 'audio',
 				recorderType: RecordRTC.StereoAudioRecorder,
@@ -133,18 +146,7 @@ var record = Vue.extend({
 			this.stopButton = true;
 			self.recTime = 0;
 			this.start();
-			this.inter = setInterval(function () {
-				self.recTime += 1;
-				blockRecord -= 1;
-				self.message = 'recording - 剩餘秒數 ' + blockRecord;
-				if (self.recTime >= 30) {
-					clearInterval(self.inter);
-					console.log("stop");
-					self.stop();
-					console.log(self.recordRTC.blob);
-					self.message = 'record finished';
-				}
-			}, 1000);
+			
 		},
 		play: function () {
 			this.message = 'audio playing';
