@@ -25,7 +25,6 @@
   height:100vh;
   z-index:-1;
   background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.28, rgb(69,132,180)), color-stop(0.64, rgb(31,71,120)) );
-  
 }
 #sky{
   top: 25vh;

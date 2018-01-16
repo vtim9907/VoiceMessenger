@@ -206,6 +206,11 @@ background: #fff;
 .otherChat {
   background-color: rgba(199, 247, 152, 0.678)
 }
+.friendList {
+  background-color:#ebebeb;
+  padding:5px;
+  border-radius: 8px;
+}
 #chat form
 {
   height: 10vh;

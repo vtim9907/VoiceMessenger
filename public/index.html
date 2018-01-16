@@ -370,13 +370,13 @@
           </div>
         </div>
         <div v-else>
-          <div class="row">
-            <div class="col-sm-2">
-             <ul class="list-group" style="">
+          <div class="row" style="padding-left:6vw;padding-right:6vw;">
+            <div class="col-sm-3 friendList">
+             <ul class="list-group">
                 <li class="list-group-item userName" v-for="i in userList" @click="selectReceiver(i)">{{i}}</li>
              </ul>
             </div>
-            <div class="col-sm-6 chatBox">
+            <div class="col-sm-9 chatBox">
               <ul id="chatList" class="w-100 border border-dark h-75 list-group customScrollBar scrollbar" style="overflow:scroll;">
                 <div v-for="i in content">
                   <div v-if="i.name1 == myName" class="customScrollBar">
@@ -390,10 +390,10 @@
               <br>
               <textarea id="chatTextarea" name='test' class="w-100" rows="4" @keydown.enter.prevent="send" placeholder="請輸入訊息..."></textarea>
             </div>
-            <div>
-              <audio id="videoTest" autoplay></audio>
-              <button class="btn btn-success" @click="voice">voice chat</button>
-            </div>
+          </div>
+          <div class="text-center">
+            <audio id="videoTest" autoplay></audio>
+            <button class="btn btn-success" @click="voice">voice chat</button>
           </div>
         </div>
       </div>
