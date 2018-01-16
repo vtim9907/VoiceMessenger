@@ -216,7 +216,12 @@
       <div v-else>
         <div class="container row">
           <div class="col-sm-4" style="width: 450px; hight: 450px;" v-for='i in lists'>
-            <img class="card-img-top" :src="i.photoPath" alt="Card image cap">
+            <div v-if="i.photoPath">
+              <img class="card-img-top" :src="i.photoPath" alt="Card image cap" height="250px" width="250px">
+            </div>
+            <div v-else>
+              <img class="card-img-top" src="https://goo.gl/eKdiuU" alt="Card image cap" height="250px" width="250px">
+            </div>
             <div class="card-block justify-content-center text-center">
               <h3 class="card-title"> {{i.nickname}}</h3>
             </div>
@@ -250,8 +255,16 @@
         <img class="card-img-top" src="https://goo.gl/eKdiuU" v-if="!photo">
         <div class="card-body">
           <h2 class="card-title">{{name}}</h2>
-          <h5 class="card-text" v-if="gender">性別:{{gender}}</h4>
-          <h5 class="card-text" v-if="age">年齡:{{age}}</h4>
+          <hr class="styleB">
+          <div class="row" style="padding-left:50px;padding-right:50px">
+            <h5 class="col-sm-6 remind">性別</h5>
+            <h5 class="col-sm-6">{{gender}}</h5>
+          </div>
+          <div class="row" style="padding-left:50px;padding-right:50px">
+              <h5 class="col-sm-6 remind">年齡</h5>
+              <h5 class="col-sm-6">{{age}}</h5>
+          </div>
+          <hr class="styleB">
         </div>
         <div>
           <audio id="voice" @ended="handleEnded()">
@@ -379,7 +392,7 @@
             </div>
             <div>
               <audio id="videoTest" autoplay></audio>
-              <button @click="voice">voice chat</button>
+              <button class="btn btn-success" @click="voice">voice chat</button>
             </div>
           </div>
         </div>
