@@ -11,6 +11,7 @@ var msg_center = new Vue({
         stream: undefined,
         calling_stat: false,
         talking_stat: false,
+        close_stat: false,
         my_name: ''
     },
     methods: {
@@ -25,7 +26,7 @@ var msg_center = new Vue({
         },
         accept_call: function(){
             this.connection.send({accept:true});
-            this.message = "call request accept";
+            this.message = "通話已接受";
             /*
             var self = this;
             navigator.getUserMedia = navigator.getUserMedia ||
@@ -56,10 +57,10 @@ var msg_center = new Vue({
         reject_call: function(){
             var self = this;
             this.connection.send({accept:false});
-            this.message = "call request reject";
+            this.message = "通話已拒絕";
             //self.call.close();
-            this.get_call_show = false;
-            self.connection.close();
+            //this.get_call_show = false;
+            //self.connection.close();
             self.quit();
         },
         stop: function(){
@@ -70,7 +71,8 @@ var msg_center = new Vue({
         },
         stop_calling: function(){//中止通話請求
             var self = this;
-            self.connection.send({stop_calling:true});
+            self.connection.send({stop_calling:true,caller:self.my_name});
+            self.message = "與 " + self.toUserID + " 的通話請求已取消";
             //self.call_show = self.get_call_show = false;
             self.quit();
             /*
@@ -79,12 +81,14 @@ var msg_center = new Vue({
                 self.peer.reconnect('aaa');
             });
             */
-            self.connection.close();
+            //self.connection.close();
         },
         quit: function(){
             var self = this;
-            self.call_show = self.get_call_show = false;
-            bus.$emit('enable');
+            self.calling_stat = self.talking_stat = false;
+            self.close_stat = true;
+            //bus.$emit('enable');
+            //self.connection.close();
         },
         hash: function(str){
             var h = 0;
@@ -95,6 +99,12 @@ var msg_center = new Vue({
                 h = h & h;
             }
             return h;
+        },
+        close: function(){
+            var self = this;
+            self.call_show = self.get_call_show = false;
+            bus.$emit('enable');
+            self.connection.close();
         }
     },
     created: function(){
@@ -131,8 +141,9 @@ var msg_center = new Vue({
                 connection.on('data',function(data){
                     self.calling_stat = true;
                     self.get_call_show = true;
+                    self.close_stat = false;
                     if(data.stop_calling == true){//對方中止通話請求
-                        self.message = self.my_name + "中止通話請求";
+                        self.message = data.caller + " 已經中止通話請求";
                         //self.call_show = self.get_call_show = false;
                         self.quit();
                         /*
@@ -141,9 +152,11 @@ var msg_center = new Vue({
                             self.peer.reconnect('ccc');
                         });
                         */
-                        self.connection.close();
+                        //self.connection.close();
+                    }else{
+                        self.message = data.name + " 想要與你通話";
                     }
-                    self.message = data.name + " 想要與你通話";
+                    
                     //console.log(data);
                 });
 
@@ -176,7 +189,7 @@ var msg_center = new Vue({
 
                     self.call.on('close',function(){
                         self.talking_stat = false;
-                        self.message = "停止通話";
+                        self.message = "通話已停止";
                         self.stream.getTracks()[0].stop();
                         //self.call_show = self.get_call_show = false;
                         self.quit();
@@ -201,6 +214,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
     var self = this;
     this.toUserID = toUserID;
     this.call_show = true;
+    this.close_stat = false;
 
     this.message = '正在撥號給 ' + this.toUserID;
 
@@ -240,7 +254,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
 
                 self.call.on('close',function(){
                     self.talking_stat = false;
-                    self.message = "停止通話";
+                    self.message = "通話已停止";
                     self.stream.getTracks()[0].stop();
                     //self.call_show = self.get_call_show = false;
                     self.quit();
@@ -249,7 +263,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
                 console.log(error);
             });
 
-        }else{//對方拒絕
+        }else if(data.accept == false){//對方拒絕
             self.message = self.toUserID + " 拒絕與你通話";
             //self.call_show = self.get_call_show = false;
             self.quit();

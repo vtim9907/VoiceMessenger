@@ -117,6 +117,9 @@
       <p class="card-body" v-if="talking_stat">
         <button class="btn btn-primary" @click="stop">結束通話</button>
       </p>
+      <p class="card-body" v-if="close_stat">
+        <button class="btn btn-primary" @click="close">關閉</button>
+      </p>
     </div>
 
     <div class="card position-fixed" v-if="get_call_show" style="right:0px;top:10%;text-align:center;">
@@ -127,6 +130,9 @@
       </p>
       <p class="card-body" v-if="talking_stat">
       <button class="btn btn-primary" @click="stop">結束通話</button>
+      </p>
+      <p class="card-body" v-if="close_stat">
+        <button class="btn btn-primary" @click="close">關閉</button>
       </p>
     </div>
     </transition>
