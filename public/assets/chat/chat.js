@@ -78,6 +78,9 @@ var chat = Vue.extend({
                 self.stream = stream;
             });
             */
+        },
+        call: function(){
+            msg_center.$emit('test', this.user);
         }
     },
     created: function () {
@@ -118,7 +121,8 @@ var chat = Vue.extend({
         });
         $.get('givename', function (userName) {
             myName = userName;
-            self.peer = new Peer(userName, { host: 'luffy.ee.ncku.edu.tw', port: 9907, secure: true, path: '/peer', debug: 3 });
+            /*
+            self.peer = new Peer(userName, { host: 'localhost', port: 9907, secure: true, path: '/peer', debug: 3 });
             self.peer.on('open', function(id){
                 console.log('peer id: ' + id);
             });
@@ -139,6 +143,7 @@ var chat = Vue.extend({
                     console.log(error);
                 });
             });
+            */
         });
         //this.user = this.userList[0];
         /*
@@ -159,7 +164,13 @@ var chat = Vue.extend({
             self.myName = myName;
             self.content = data.content;
         });
-        
+        bus.$on('disable',function(){
+            $('#voice_chat').attr('disabled','disabled');
+        });
+
+        bus.$on('enable',function(){
+            $('#voice_chat').removeAttr('disabled');
+        });
     },
     deactivated: function () {
         //clearInterval(this.inter);
@@ -167,8 +178,10 @@ var chat = Vue.extend({
     destroyed: function () {
         console.log('destroyed');
         this.socket.disconnect();
+        /*
         this.peer.disconnect();
         this.peer.destroy();
+        */
     }
 });
 

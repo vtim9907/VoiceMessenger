@@ -104,6 +104,31 @@
     <div id="sky"></div>
   </div>
 
+
+  <div id="msg_center">
+    <audio id="audio_play" autoplay></audio>
+    <div v-if="call_show" class="position-fixed col-lg-4" style="background-color:white;right:0px;top:10%;height:20%">
+      <p>{{message}}</p>
+      <p v-if="calling_stat">
+        <button @click="stop_calling">stop calling</button>
+      </p>
+      <p v-if="talking_stat">
+        <button @click="stop">stop</button>
+      </p>
+    </div>
+
+    <div v-if="get_call_show" class="position-fixed col-lg-4" style="background-color:white;right:0px;top:10%;height:20%">
+      <p>{{message}}</p>
+      <p v-if="calling_stat">
+        <button @click="accept_call">accept</button>
+        <button @click="reject_call">reject</button>
+      </p>
+      <p v-if="talking_stat">
+      <button @click="stop">stop</button>
+      </p>
+    </div>
+  </div>
+
   <script type="text/x-template" id="record">
     <div class="container" style="padding-top:5vh;">
       <div class="text-center editForm"  style="border-radius: 15px; padding:15px;">
@@ -400,7 +425,7 @@
           </div>
           <div class="text-center">
             <audio id="videoTest" autoplay></audio>
-            <button class="btn btn-success" @click="voice">voice chat</button>
+            <button class="btn btn-success" @click="call">voice chat</button>
           </div>
         </div>
       </div>
@@ -451,7 +476,7 @@
   <script type='text/javascript' src='js/sidebar.js'></script>
   <script type="text/javascript" src="js/register.js"></script>
   <script type="text/javascript" src="qa/qa.js"></script>
-
+  <script type="text/javascript" src="msg_center/msg_center.js"></script>
 </body>
 
 </html>
