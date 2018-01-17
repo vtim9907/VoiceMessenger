@@ -541,7 +541,8 @@ app.post('/get_posts', checkAuthentication, function(req, res) {
                 model: models.User,
                 as: "author",
                 attributes: [
-                    ["photoPath", "image"]
+                    ["photoPath", "image"],
+                    ["nickname", "name"]
                 ],
                 raw: true
             },

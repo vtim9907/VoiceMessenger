@@ -347,9 +347,9 @@
               <button type="button" class="btn" v-if="encoding">處理中...</button>
               <a v-if="recording">&nbsp;&nbsp;剩餘秒數: {{timer}}</a>
               <button type="button" class="btn btn-primary" @click="recordOrStop" v-if="recorded">重錄</button>
-              <button type="button" class="btn btn-primary" @click="play" v-if="recorded">播放</button>
+              <button type="button" class="btn btn-primary" @click="playOrStop" v-if="recorded">{{ playing ? "停止" : "播放"}}</button>
               <a v-if="recorded">&nbsp;&nbsp;已經錄製了 {{length}} 秒</a>
-              <audio class="d-none" id="postRecord" controls></audio> 
+              <audio class="d-none" id="postRecord" controls @ended="handleEnded()"></audio> 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -377,6 +377,7 @@
               <!-- Modal content-->
               <div class="modal-content post-publish-area">
                 <div class="modal-header">
+                  <a>{{currentPost["author.name"]}} 在 {{currentPost.newDate}} 寫到: </a>
                   <button type="button" class="close post-cancel" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body .post-content-container">

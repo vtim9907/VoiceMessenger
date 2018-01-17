@@ -44,13 +44,15 @@ Vue.component('forum-content', {
         return {
             currentPost: {
                 content: "",
-                path: ""
+                path: "",
+                date: null
             },
             content: "",
             preventSendTwice: false,
             recorded: false,
             recording: false,
             encoding: false,
+            playing: false,
             timer: 30,
             length: 0,
             recordRTC: {},
@@ -64,6 +66,9 @@ Vue.component('forum-content', {
     methods: {
         showPost: function(post) {
             this.currentPost = post;
+            var date = new Date(this.currentPost.date);
+            this.currentPost.newDate = date.toLocaleString('zh-tw');
+
             console.log(this.currentPost);
             $('#post_modal').modal('show');
         },
@@ -195,13 +200,18 @@ Vue.component('forum-content', {
             this.start();
             
         },
-        play: function () {
+        playOrStop: function () {
             var audio = document.getElementById('postRecord');
-            audio.play();
-            var self = this;
-            audio.onended = function () {
-                self.message = 'audio end';
-            };
+            this.playing = !this.playing;
+            if (this.playing) {
+                audio.play();
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+        },
+        handleEnded: function() {
+            this.playing = false;
         }
     }
 });
