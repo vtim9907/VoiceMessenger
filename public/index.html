@@ -15,6 +15,7 @@
   <link href="card/loading.css" rel="stylesheet">
   <link href="forum/forum.css" rel="stylesheet">
   <link href="qa/qa.css" rel="stylesheet">
+  <link href="msg_center/msg_center.css" rel="stylesheet">
   <link rel="manifest" href="./manifest.json">
   <script type="text/javascript" src="js/Vue.js"></script>
   <script type="text/javascript" src="js/lame.all.js"></script>
@@ -107,26 +108,28 @@
 
   <div id="msg_center">
     <audio id="audio_play" autoplay></audio>
-    <div v-if="call_show" class="position-fixed col-lg-4" style="background-color:white;right:0px;top:10%;height:20%">
-      <p>{{message}}</p>
-      <p v-if="calling_stat">
-        <button @click="stop_calling">stop calling</button>
+    <transition name="slide-fade">
+    <div class="card position-fixed" v-if="call_show" style="right:0px;top:10%;text-align:center;">
+      <p class="card-header">{{message}}</p>
+      <p class="card-body" v-if="calling_stat">
+        <button class="btn btn-primary" @click="stop_calling">stop calling</button>
       </p>
-      <p v-if="talking_stat">
-        <button @click="stop">stop</button>
+      <p class="card-body" v-if="talking_stat">
+        <button class="btn btn-primary" @click="stop">stop</button>
       </p>
     </div>
 
-    <div v-if="get_call_show" class="position-fixed col-lg-4" style="background-color:white;right:0px;top:10%;height:20%">
-      <p>{{message}}</p>
-      <p v-if="calling_stat">
-        <button @click="accept_call">accept</button>
-        <button @click="reject_call">reject</button>
+    <div class="card position-fixed" v-if="get_call_show" style="right:0px;top:10%;text-align:center;">
+      <p class="card-header">{{message}}</p>
+      <p class="card-body" v-if="calling_stat">
+        <button class="btn btn-primary" @click="accept_call">accept</button>
+        <button class="btn btn-primary" @click="reject_call">reject</button>
       </p>
-      <p v-if="talking_stat">
-      <button @click="stop">stop</button>
+      <p class="card-body" v-if="talking_stat">
+      <button class="btn btn-primary" @click="stop">stop</button>
       </p>
     </div>
+    </transition>
   </div>
 
   <script type="text/x-template" id="record">
