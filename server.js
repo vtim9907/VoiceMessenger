@@ -734,7 +734,7 @@ models.sequelize.sync({ force: true }).then(function () {
 });
 
 // big matching: prebuild cards of next day;
-schedule.scheduleJob("*/2 * * * *", function prebuildCard() {
+schedule.scheduleJob("*/1 * * * *", function prebuildCard() {
     let card = dailyCardSwitch ? "card1" : "card2";
 
     let col = {};
@@ -781,7 +781,7 @@ schedule.scheduleJob("* * 12-23 * * *", function() {
 */
 
 // ready to update cards
-schedule.scheduleJob("*/5 * * * *", function switchToNextDay() {
+schedule.scheduleJob("*/2 * * * *", function switchToNextDay() {
     console.log("Switch to next day !!");
     console.log("dailyCardSwitch: ", dailyCardSwitch);
     dailyCardSwitch = !dailyCardSwitch;
