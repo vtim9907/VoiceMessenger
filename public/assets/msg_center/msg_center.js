@@ -10,7 +10,8 @@ var msg_center = new Vue({
         connection: undefined,
         stream: undefined,
         calling_stat: false,
-        talking_stat: false
+        talking_stat: false,
+        my_name: ''
     },
     methods: {
         test: function(){
@@ -84,12 +85,24 @@ var msg_center = new Vue({
             var self = this;
             self.call_show = self.get_call_show = false;
             bus.$emit('enable');
+        },
+        hash: function(str){
+            var h = 0;
+            if(str.length == 0) return hash;
+            for(i=0;i<str.length;i++){
+                char = str.charCodeAt(i);
+                h = ((h<<5)-h) + char;
+                h = h & h;
+            }
+            return h;
         }
     },
     created: function(){
         var self = this;
         $.get('givename', function (userName) {
-            self.peer = new Peer(userName, { host: 'luffy.ee.ncku.edu.tw', port: 9907, secure: true, path: '/peer', debug: 3 });
+            self.my_name = userName;
+            var id = self.hash(userName);
+            self.peer = new Peer(id, { host: 'luffy.ee.ncku.edu.tw', port: 9907, secure: true, path: '/peer', debug: 3 });
             self.peer.on('open', function(id){
                 console.log('peer id: ' + id);
             });
@@ -130,7 +143,7 @@ var msg_center = new Vue({
                         */
                         self.connection.close();
                     }
-                    self.message = data.id;
+                    self.message = data.name;
                     //console.log(data);
                 });
 
@@ -191,10 +204,11 @@ msg_center.$on('test', function(toUserID){//呼叫者
 
     this.message = 'calling ' + this.toUserID;
 
-    this.connection = this.peer.connect(this.toUserID);
+    var peer_id = this.hash(toUserID)
+    this.connection = this.peer.connect(peer_id);
 
     this.connection.on('open',function(){
-        self.connection.send({id:self.peer.id});
+        self.connection.send({id:self.peer.id,name:self.my_name});
     });
 
     this.connection.on('close',function(){
@@ -215,7 +229,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
                 audio: true
             },function(stream){
                 self.stream = stream;
-                self.call = self.peer.call(self.toUserID, stream);
+                self.call = self.peer.call(peer_id, stream);
                 self.call.on('stream',function(stream){
                     self.calling_stat = false;
                     self.talking_stat = true;
