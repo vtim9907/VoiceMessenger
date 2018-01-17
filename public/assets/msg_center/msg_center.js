@@ -110,7 +110,7 @@ var msg_center = new Vue({
                 console.log(error);
                 switch(error.type){
                     case 'peer-unavailable': 
-                        self.message = self.toUserID + ' is offline';
+                        self.message = self.toUserID + ' 目前不再線';
                         //self.call_show = self.get_call_show = false;
                         self.quit();
                     break;
@@ -132,7 +132,7 @@ var msg_center = new Vue({
                     self.calling_stat = true;
                     self.get_call_show = true;
                     if(data.stop_calling == true){//對方中止通話請求
-                        self.message = "caller stop calling";
+                        self.message = self.my_name + "中止通話請求";
                         //self.call_show = self.get_call_show = false;
                         self.quit();
                         /*
@@ -143,7 +143,7 @@ var msg_center = new Vue({
                         */
                         self.connection.close();
                     }
-                    self.message = data.name;
+                    self.message = data.name + " 想要與你通話";
                     //console.log(data);
                 });
 
@@ -171,12 +171,12 @@ var msg_center = new Vue({
                         var audio = document.getElementById('audio_play');
                         audio.src = window.URL.createObjectURL(stream);
 
-                        self.message = "start voice talk";
+                        self.message = "開始通話";
                     });
 
                     self.call.on('close',function(){
                         self.talking_stat = false;
-                        self.message = "stop voice talk";
+                        self.message = "停止通話";
                         self.stream.getTracks()[0].stop();
                         //self.call_show = self.get_call_show = false;
                         self.quit();
@@ -202,7 +202,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
     this.toUserID = toUserID;
     this.call_show = true;
 
-    this.message = 'calling ' + this.toUserID;
+    this.message = '正在撥號給 ' + this.toUserID;
 
     var peer_id = this.hash(toUserID)
     this.connection = this.peer.connect(peer_id);
@@ -219,7 +219,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
     this.connection.on('data',function(data){
         self.calling_stat = true;//
         if(data.accept == true){//對方接受
-            self.message = "request accepted";
+            self.message = self.toUserID + "接受通話請求";
 
             navigator.getUserMedia = navigator.getUserMedia ||
             navigator.webkitGetUserMedia ||navigator.mozGetUserMedia ||navigator.msGetUserMedia;
@@ -233,14 +233,14 @@ msg_center.$on('test', function(toUserID){//呼叫者
                 self.call.on('stream',function(stream){
                     self.calling_stat = false;
                     self.talking_stat = true;
-                    self.message = "start voice talk";
+                    self.message = "開始通話";
                     var audio = document.getElementById('audio_play');
                     audio.src = window.URL.createObjectURL(stream);
                 });
 
                 self.call.on('close',function(){
                     self.talking_stat = false;
-                    self.message = "stop voice talk";
+                    self.message = "停止通話";
                     self.stream.getTracks()[0].stop();
                     //self.call_show = self.get_call_show = false;
                     self.quit();
@@ -250,7 +250,7 @@ msg_center.$on('test', function(toUserID){//呼叫者
             });
 
         }else{//對方拒絕
-            self.message = "request rejected";
+            self.message = self.toUserID + " 拒絕與你通話";
             //self.call_show = self.get_call_show = false;
             self.quit();
         }

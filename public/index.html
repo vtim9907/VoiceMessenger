@@ -112,21 +112,21 @@
     <div class="card position-fixed" v-if="call_show" style="right:0px;top:10%;text-align:center;">
       <p class="card-header">{{message}}</p>
       <p class="card-body" v-if="calling_stat">
-        <button class="btn btn-primary" @click="stop_calling">stop calling</button>
+        <button class="btn btn-primary" @click="stop_calling">停止呼叫</button>
       </p>
       <p class="card-body" v-if="talking_stat">
-        <button class="btn btn-primary" @click="stop">stop</button>
+        <button class="btn btn-primary" @click="stop">結束通話</button>
       </p>
     </div>
 
     <div class="card position-fixed" v-if="get_call_show" style="right:0px;top:10%;text-align:center;">
       <p class="card-header">{{message}}</p>
       <p class="card-body" v-if="calling_stat">
-        <button class="btn btn-primary" @click="accept_call">accept</button>
-        <button class="btn btn-primary" @click="reject_call">reject</button>
+        <button class="btn btn-primary" @click="accept_call">接受通話請求</button>
+        <button class="btn btn-primary" @click="reject_call">拒絕通話請求</button>
       </p>
       <p class="card-body" v-if="talking_stat">
-      <button class="btn btn-primary" @click="stop">stop</button>
+      <button class="btn btn-primary" @click="stop">結束通話</button>
       </p>
     </div>
     </transition>
